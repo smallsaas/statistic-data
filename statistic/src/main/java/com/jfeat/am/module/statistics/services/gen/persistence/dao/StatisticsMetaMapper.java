@@ -1,7 +1,7 @@
 package com.jfeat.am.module.statistics.services.gen.persistence.dao;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.jfeat.am.module.statistics.services.gen.persistence.model.StatisticsMeta;
-import com.baomidou.mybatisplus.mapper.BaseMapper;
 
 /**
  * <p>

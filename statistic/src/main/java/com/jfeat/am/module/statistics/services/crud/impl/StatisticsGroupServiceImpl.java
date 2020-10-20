@@ -1,7 +1,7 @@
 package com.jfeat.am.module.statistics.services.crud.impl;
 
-import com.baomidou.mybatisplus.mapper.BaseMapper;
-import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.jfeat.am.module.statistics.services.persistence.dao.StatisticsGroupMapper;
 import com.jfeat.am.module.statistics.services.persistence.model.StatisticsGroup;
 import com.jfeat.am.module.statistics.services.crud.StatisticsGroupService;
@@ -35,7 +35,7 @@ public class StatisticsGroupServiceImpl  extends CRUDServiceGroupImpl<Statistics
     @Override
     public StatisticsGroup getGroupByName(String name) {
         List<StatisticsGroup> list = statisticsGroupMapper.selectList(
-                new EntityWrapper<StatisticsGroup>()
+                new QueryWrapper<StatisticsGroup>()
                 .eq("name", name));
         if(list==null || list.size()==0){
             return null;

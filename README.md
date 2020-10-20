@@ -16,7 +16,3 @@ SELECT field,record_name,record_time,
   max(case when field_name='field3' then value else 0 end) AS '文章名称'
 FROM st_statistic_record group by field, record_name, record_time;
 ```
-
-### 大屏数据展示模板 
-> 模板效果结合首页数据布局可配置框架
-[ 大屏数据展示模板](https://gitee.com/kequandian/DaShuJuZhiDaPingZhanShi)

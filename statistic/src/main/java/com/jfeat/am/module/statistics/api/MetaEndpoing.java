@@ -1,6 +1,7 @@
 package com.jfeat.am.module.statistics.api;
 
-import com.baomidou.mybatisplus.plugins.Page;
+//import com.jfeat.am.module.log.annotation.BusinessLog;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.jfeat.am.module.log.annotation.BusinessLog;
 import com.jfeat.am.module.statistics.services.crud.StatisticsMetaService;
 import com.jfeat.am.module.statistics.services.domain.dao.QueryStatisticsMetaDao;
@@ -59,7 +60,6 @@ public class MetaEndpoing {
 
         return SuccessTip.create(affected);
     }
-
     @BusinessLog(name = "StatisticsMeta", value = "查看 StatisticsMeta")
     @GetMapping("/getOne/{id}")
     @ApiOperation(value = "查看 StatisticsMeta",response = StatisticsMeta.class)
@@ -102,19 +102,19 @@ public class MetaEndpoing {
             @ApiImplicitParam(name = "sort", dataType = "String")
     })
     public Tip queryStatisticsMetas(Page<StatisticsMetaRecord> page,
-            @RequestParam(name = "pageNum", required = false, defaultValue = "1") Integer pageNum,
-            @RequestParam(name = "pageSize", required = false, defaultValue = "10") Integer pageSize,
-            @RequestParam(name = "search", required = false) String search,
-            @RequestParam(name = "id", required = false) Long id,
-            @RequestParam(name = "field", required = false) String field,
-            @RequestParam(name = "querySql", required = false) String querySql,
-            @RequestParam(name = "percent", required = false) Integer percent,
-            @RequestParam(name = "icon", required = false) String icon,
-            @RequestParam(name = "title", required = false) String title,
-            @RequestParam(name = "type", required = false) String type,
-            @RequestParam(name = "permission", required = false) String permission,
-            @RequestParam(name = "orderBy", required = false) String orderBy,
-            @RequestParam(name = "sort", required = false)  String sort) {
+                                    @RequestParam(name = "pageNum", required = false, defaultValue = "1") Integer pageNum,
+                                    @RequestParam(name = "pageSize", required = false, defaultValue = "10") Integer pageSize,
+                                    @RequestParam(name = "search", required = false) String search,
+                                    @RequestParam(name = "id", required = false) Long id,
+                                    @RequestParam(name = "field", required = false) String field,
+                                    @RequestParam(name = "querySql", required = false) String querySql,
+                                    @RequestParam(name = "percent", required = false) Integer percent,
+                                    @RequestParam(name = "icon", required = false) String icon,
+                                    @RequestParam(name = "title", required = false) String title,
+                                    @RequestParam(name = "type", required = false) String type,
+                                    @RequestParam(name = "permission", required = false) String permission,
+                                    @RequestParam(name = "orderBy", required = false) String orderBy,
+                                    @RequestParam(name = "sort", required = false)  String sort) {
         if(orderBy!=null&&orderBy.length()>0){
             if(sort!=null&&sort.length()>0){
                 String pattern = "(ASC|DESC|asc|desc)";

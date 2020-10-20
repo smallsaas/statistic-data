@@ -31,24 +31,5 @@ public class AmApplication implements CommandLineRunner {
         SpringApplication.run(AmApplication.class, args);
         logger.info("Statistic Statement is success!");
 
-
-
-
-        /**
-         * find jar file
-         */
-        String LOCATION = "";
-        String URLLOCATION = "";
-        try {
-            LOCATION =com.jfeat.am.core.jwt.JWTKit.class.getProtectionDomain().getCodeSource().getLocation().getFile();
-            URLLOCATION =  URLDecoder.decode(LOCATION, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            logger.info( "error:");
-            logger.info( ""+e);
-        }
-        logger.info( "** loc=" + LOCATION + "; URLLoc=" + URLLOCATION);
-        logger.info( "** loc=" + LOCATION + "; URLLoc=" + URLLOCATION);
-        logger.info( "** loc=" + LOCATION + "; URLLoc=" + URLLOCATION);
-
     }
 }

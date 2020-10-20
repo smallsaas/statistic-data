@@ -2,7 +2,7 @@ package com.jfeat.am.module.statistics.services.crud.impl;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.jfeat.am.module.statistics.services.crud.SQLSearchLabelService;
 import com.jfeat.am.module.statistics.services.crud.StatisticsMetaService;
 import com.jfeat.am.module.statistics.services.crud.model.MetaColumns;
@@ -13,7 +13,6 @@ import com.jfeat.crud.base.exception.BusinessCode;
 import com.jfeat.crud.base.exception.BusinessException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.jfeat.am.core.shiro.ShiroKit;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.sql.DataSource;
@@ -65,18 +64,12 @@ public class StatisticsMetaServiceImpl extends CRUDStatisticsMetaServiceImpl imp
             String countSQL;//用于查询总记录数
             Connection connection = dataSource.getConnection();
             //根据field获取sql
-            List<StatisticsMeta> statisticsMetas = statisticsMetaMapper.selectList(new EntityWrapper<StatisticsMeta>()
+            List<StatisticsMeta> statisticsMetas = statisticsMetaMapper.selectList(new QueryWrapper<StatisticsMeta>()
                     .eq(StatisticsMeta.FIELD, field));
             if(statisticsMetas!=null&&statisticsMetas.size()>0){
                 StatisticsMeta meta = statisticsMetas.get(0);
                 if(meta.getType()==null||meta.getType().equals("")){throw new BusinessException(BusinessCode.CRUD_QUERY_FAILURE,"需要搜索的类型未配置");}
                 if(meta.getSearch()==null||meta.getSearch().equals("")){}else{searchArray=meta.getSearch().split(",");}
-                // 如果报表有限制权限 权限判断
-                if(meta.getPermission()!=null&&!"".equals(meta.getPermission())){
-                    if(!ShiroKit.hasPermission(meta.getPermission())){
-                        throw new BusinessException(BusinessCode.AuthorizationError,"没有权限");
-                    }
-                }
                 //字段的说明
                 String tips = meta.getTips();
                 //调用策略方法解包 tips
@@ -284,7 +277,7 @@ public StringBuilder getSearchSQL(StringBuilder sql,HttpServletRequest request,M
             String countSQL;//用于查询总记录数
             Connection connection = dataSource.getConnection();
             //根据field获取sql
-            List<StatisticsMeta> statisticsMetas = statisticsMetaMapper.selectList(new EntityWrapper<StatisticsMeta>().eq(StatisticsMeta.FIELD, field));
+            List<StatisticsMeta> statisticsMetas = statisticsMetaMapper.selectList(new QueryWrapper<StatisticsMeta>().eq(StatisticsMeta.FIELD, field));
             if(statisticsMetas!=null&&statisticsMetas.size()>0){
                 StatisticsMeta meta = statisticsMetas.get(0);
                 typeArray = meta.getType().split(",");

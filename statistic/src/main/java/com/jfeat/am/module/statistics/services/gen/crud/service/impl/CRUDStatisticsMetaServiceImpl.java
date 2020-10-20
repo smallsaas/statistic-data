@@ -1,11 +1,10 @@
 package com.jfeat.am.module.statistics.services.gen.crud.service.impl;
             
-import com.baomidou.mybatisplus.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.jfeat.crud.plus.FIELD;
 import com.jfeat.am.module.statistics.services.gen.persistence.model.StatisticsMeta;
 import com.jfeat.am.module.statistics.services.gen.persistence.dao.StatisticsMetaMapper;
 import com.jfeat.am.module.statistics.services.gen.crud.service.CRUDStatisticsMetaService;
-import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 import com.jfeat.crud.base.exception.BusinessCode;
 import com.jfeat.crud.base.exception.BusinessException;

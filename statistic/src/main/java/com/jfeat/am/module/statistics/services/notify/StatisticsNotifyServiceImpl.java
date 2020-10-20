@@ -1,5 +1,7 @@
 package com.jfeat.am.module.statistics.services.notify;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.jfeat.am.module.statistics.services.persistence.dao.StatisticsRecordMapper;
 import com.jfeat.am.module.statistics.services.persistence.model.StatisticsRecord;
 import org.springframework.stereotype.Service;
@@ -53,7 +55,15 @@ public class StatisticsNotifyServiceImpl implements StatisticsNotifyService {
             String recordValue = chunk.getValue();
 
             /// check exists first
-            StatisticsRecord one = statisticsRecordMapper.selectOne(record);
+//            StatisticsRecord one = statisticsRecordMapper.selectOne(record);
+            LambdaQueryWrapper<StatisticsRecord> queryWrapper = Wrappers.<StatisticsRecord>lambdaQuery()
+                    .eq(StatisticsRecord::getField,fieldName)
+                    .eq(StatisticsRecord::getRecordName,chunk.getName())
+                    .eq(StatisticsRecord::getRecordTuple,chunk.getTuple())
+                    .eq(StatisticsRecord::getRecordCluster,chunk.getCluster())
+                    .eq(StatisticsRecord::getTimeline,chunk.getTimeline());
+
+            StatisticsRecord one = statisticsRecordMapper.selectOne(queryWrapper);
             if(one==null){
 
                 // add new, update value & record time

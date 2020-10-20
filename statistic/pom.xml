@@ -22,39 +22,35 @@
         <skipStandalone>true</skipStandalone>
         <commons-lang3.version>3.9</commons-lang3.version>
         <!---CRUD, scope provided-->
-        <crud-plus.version>0.0.6</crud-plus.version>
-        <crud-core.version>0.0.2</crud-core.version>
+        <crud-plus.version>0.1.0</crud-plus.version>
+        <crud-core.version>0.0.5</crud-core.version>
         <!---only dev, scope provided-->
-        <crud-dev.version>0.0.1</crud-dev.version>
+        <crud-dev.version>0.0.2</crud-dev.version>
         <!---only produce, scope provided-->
-        <crud-log.version>0.0.1</crud-log.version>
         <lombok.version>1.18.4</lombok.version>
         <hutool-core.version>5.1.0</hutool-core.version>
     </properties>
 
     <dependencies>
         <!-- dev only -->
-       <!-- <dependency>
+        <dependency>
             <groupId>com.jfeat</groupId>
             <artifactId>crud-dev</artifactId>
             <version>${crud-dev.version}</version>
-        </dependency>-->
+            <scope>provided</scope>
+        </dependency>
         <dependency>
             <groupId>com.jfeat</groupId>
             <artifactId>crud-plus</artifactId>
             <version>${crud-plus.version}</version>
         </dependency>
-        <dependency>
+        <!--<dependency>
             <groupId>com.jfeat</groupId>
             <artifactId>uaas</artifactId>
             <version>2.1.0</version>
-        </dependency>
+        </dependency>-->
 
-        <dependency>
-            <groupId>com.jfeat</groupId>
-            <artifactId>perm-core</artifactId>
-            <version>0.0.1</version>
-        </dependency>
+
         <dependency>
             <groupId>com.jfeat</groupId>
             <artifactId>crud-core</artifactId>
@@ -62,11 +58,11 @@
         </dependency>
 
         <!--statistic-->
-        <dependency>
+        <!--<dependency>
             <groupId>com.jfeat</groupId>
             <artifactId>statement</artifactId>
             <version>1.0.0</version>
-        </dependency>
+        </dependency>-->
 
         <!-- springboot cache -->
         <dependency>

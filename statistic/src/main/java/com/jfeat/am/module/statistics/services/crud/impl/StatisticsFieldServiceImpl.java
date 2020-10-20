@@ -1,7 +1,7 @@
 package com.jfeat.am.module.statistics.services.crud.impl;
 
-import com.baomidou.mybatisplus.mapper.BaseMapper;
-import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.jfeat.am.module.statistics.services.crud.StatisticsFieldService;
 import com.jfeat.am.module.statistics.services.crud.model.StatisticsFieldModel;
 import com.jfeat.am.module.statistics.services.domain.dao.QueryStatisticsRecordDao;
@@ -58,8 +58,9 @@ public class StatisticsFieldServiceImpl extends CRUDServiceOnlyImpl<StatisticsFi
      */
     @Override
     public StatisticsField getStatisticFieldByName(String field) {
-        StatisticsField queryItem = new StatisticsField();
-        queryItem.setField(field);
+     /*   StatisticsField queryItem = new StatisticsField();
+        queryItem.setField(field);*/
+        QueryWrapper<StatisticsField> queryItem = new QueryWrapper<StatisticsField>().eq("field", field);
         return statisticsFieldMapper.selectOne(queryItem);
     }
 
@@ -75,7 +76,7 @@ public class StatisticsFieldServiceImpl extends CRUDServiceOnlyImpl<StatisticsFi
 
         /// query meta
         List<StatisticsMeta> metas = statisticsMetaMapper.selectList
-                (new EntityWrapper<StatisticsMeta>().eq(StatisticsMeta.FIELD, field));
+                (new QueryWrapper<StatisticsMeta>().eq(StatisticsMeta.FIELD, field));
         if (metas != null && !metas.isEmpty()) {
 
             model.setMetas(metas);

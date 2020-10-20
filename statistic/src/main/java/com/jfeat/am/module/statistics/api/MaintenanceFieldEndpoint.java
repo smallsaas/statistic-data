@@ -1,6 +1,6 @@
 package com.jfeat.am.module.statistics.api;
 
-import com.baomidou.mybatisplus.plugins.Page;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.jfeat.am.module.statistics.services.domain.dao.QueryStatisticsFieldDao;
 import com.jfeat.am.module.statistics.services.persistence.model.StatisticsField;
 import com.jfeat.am.module.statistics.services.crud.StatisticsFieldService;

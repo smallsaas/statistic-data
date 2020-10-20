@@ -1,6 +1,6 @@
 package com.jfeat.am.module.statistics.services.crud.impl;
 
-import com.baomidou.mybatisplus.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.jfeat.am.module.statistics.services.persistence.dao.StatisticsFieldMapper;
 import com.jfeat.am.module.statistics.services.persistence.dao.StatisticsGroupMapper;
 import com.jfeat.am.module.statistics.services.persistence.model.StatisticsField;
