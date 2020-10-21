@@ -16,3 +16,14 @@ SELECT field,record_name,record_time,
   max(case when field_name='field3' then value else 0 end) AS '文章名称'
 FROM st_statistic_record group by field, record_name, record_time;
 ```
+
+#### 测试方式
+```sql
+DROP TABLE IF EXISTS t_sink;
+CREATE TABLE t_sink (`name` varchar(26), `count` int);
+INSERT INTO t_sink VALUES ('aaa', 2), ('bbb', 10);
+
+select name,count as '排序' from t_sink ORDER BY `排序` DESC;
+
+DROP TABLE IF EXISTS t_sink;
+```
