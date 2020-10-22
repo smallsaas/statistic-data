@@ -3,6 +3,7 @@ package com.jfeat.am.module.statistics.api;
 //import com.jfeat.am.module.log.annotation.BusinessLog;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.jfeat.am.module.log.annotation.BusinessLog;
+import com.jfeat.am.module.statistics.api.model.MetaTag;
 import com.jfeat.am.module.statistics.services.crud.StatisticsMetaService;
 import com.jfeat.am.module.statistics.services.domain.dao.QueryStatisticsMetaDao;
 import com.jfeat.am.module.statistics.services.domain.model.StatisticsMetaRecord;
@@ -38,9 +39,21 @@ public class MetaEndpoing {
     public Tip getConfigGroupList(@PathVariable String field,
                                   @RequestParam(name = "pageNum", required = false, defaultValue = "1") Long current,
                                   @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long size,
+                                  @RequestParam(name = "pattern", required = false) String pattern,
                                   HttpServletRequest request
                                   ) {
-        return SuccessTip.create(statisticsMetaService.getByField(field,current,size,request));
+        MetaTag metaTag = new MetaTag();
+        if(pattern==null){
+            metaTag.setEnableHead(true);
+            metaTag.setEnablePages(true);
+            metaTag.setEnableSearch(true);
+            metaTag.setEnableTips(true);
+            metaTag.setEnableType(true);
+        }else{
+
+        }
+
+        return SuccessTip.create(statisticsMetaService.getByField(field,current,size,metaTag,request));
     }
 
 

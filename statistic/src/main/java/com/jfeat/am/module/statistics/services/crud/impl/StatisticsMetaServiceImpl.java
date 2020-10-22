@@ -3,6 +3,7 @@ package com.jfeat.am.module.statistics.services.crud.impl;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.jfeat.am.module.statistics.api.model.MetaTag;
 import com.jfeat.am.module.statistics.services.crud.SQLSearchLabelService;
 import com.jfeat.am.module.statistics.services.crud.StatisticsMetaService;
 import com.jfeat.am.module.statistics.services.crud.model.MetaColumns;
@@ -50,121 +51,174 @@ public class StatisticsMetaServiceImpl extends CRUDStatisticsMetaServiceImpl imp
 
     //根据field获取 json化的 表
     @Override
-    public  JSONObject getByField(String field, Long current, Long size, HttpServletRequest request){
-        //分页 //总页数 pages //每页大小 size
-        //总记录数 //当前页数 current
-        Long pages=0L;
-        Long total = 0L;
+    public  JSONObject getByField(String field, Long current, Long size, MetaTag metaTag, HttpServletRequest request){
+
         String[] typeArray=null;
         String[] searchArray=null;
-        JSONObject date=new JSONObject();
-        List<JSONObject> objList=new ArrayList<>();
-        try {
-            StringBuilder sql=new StringBuilder();
-            String countSQL;//用于查询总记录数
-            Connection connection = dataSource.getConnection();
+        JSONObject data=new JSONObject();
+        StringBuilder sql=new StringBuilder();
             //根据field获取sql
-            List<StatisticsMeta> statisticsMetas = statisticsMetaMapper.selectList(new QueryWrapper<StatisticsMeta>()
-                    .eq(StatisticsMeta.FIELD, field));
+            List<StatisticsMeta> statisticsMetas = statisticsMetaMapper.selectList(new QueryWrapper<StatisticsMeta>().eq(StatisticsMeta.FIELD, field));
             if(statisticsMetas!=null&&statisticsMetas.size()>0){
                 StatisticsMeta meta = statisticsMetas.get(0);
-                if(meta.getType()==null||meta.getType().equals("")){throw new BusinessException(BusinessCode.CRUD_QUERY_FAILURE,"需要搜索的类型未配置");}
-                if(meta.getSearch()==null||meta.getSearch().equals("")){}else{searchArray=meta.getSearch().split(",");}
-                //字段的说明
-                String tips = meta.getTips();
-                //调用策略方法解包 tips
-                JSONArray endtipArray = tipUnpacking(tips);
 
-                typeArray = meta.getType().split(",");
-                date.put("columns",typeArray);
-                date.put("searchColumns",searchArray);
-                date.put("tips",endtipArray);
+                //是否启用Type
+                if(metaTag.isEnableType()){
+                    if(meta.getType()==null||meta.getType().equals("")){throw new BusinessException(BusinessCode.CRUD_QUERY_FAILURE,"需要搜索的类型未配置");}
+                    //分类
+                    typeArray = meta.getType().split(",");
+                    data.put("columns",typeArray);
+                }
 
+                //字段说明模块
+                if(metaTag.isEnableTips()){
+                    //字段的说明
+                    String tips = meta.getTips();
+                    //调用策略方法解包 tips
+                    JSONArray endtipArray = tipUnpacking(tips);
+                    data.put("tips",endtipArray);
+                }
+
+                if (metaTag.isEnableSearch()){
+                    //搜索模块
+                    if(meta.getSearch()==null||meta.getSearch().equals("")){}else{searchArray=meta.getSearch().split(",");}
+                    data.put("searchColumns",searchArray);
+                }
+
+
+
+                //整理sql执行
                 Map<String, String[]> parameterMap = request.getParameterMap();
                 //去除所有的‘;’防止拼接出错
                 sql.append(meta.getQuerySql().replaceAll(";",""));
                 //使用标签
                 sql=sqlSearchLabelService.getSQL(parameterMap,sql);
-                //替换字符串 查找总数
-                countSQL=sql.toString().replaceFirst("(select|SELECT)","SELECT COUNT(*) as total,");
+                data = getTableInfo(data,typeArray, current, size, sql, metaTag, request);
             }
             else  {throw new BusinessException(BusinessCode.CRUD_QUERY_FAILURE,"查找不到field对应的Meta");}
+
+        return data;
+      }
+
+
+    //countSQL 用于查询总记录数
+       public JSONObject getTableInfo(JSONObject data,String[] typeArray,Long current, Long size,StringBuilder sql ,MetaTag metaTag, HttpServletRequest request){
+
+           String countSQL;
+           //替换字符串 查找总数
+           countSQL=sql.toString().replaceFirst("(select|SELECT)","SELECT COUNT(*) as total,");
+
+           //分页 //总页数 pages //每页大小 size
+           //总记录数 //当前页数 current
+           Long pages=0L;
+           Long total = 0L;
+           List<JSONObject> objList=new ArrayList<>();
+
+           try {
+           Connection connection = dataSource.getConnection();
+           List<String> names=new ArrayList<>();//字段名
+           Map<String,String> nameTypeMap=new HashMap<>();//名字 类型映射
             //创建 可循环滚动的rs
             Statement stmt = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
+            //第一次运行读取字段
             ResultSet rs = stmt.executeQuery(countSQL);
             ResultSetMetaData resultSetMetaData = rs.getMetaData();
             int colunmCount = resultSetMetaData.getColumnCount();
-            List<String> names=new ArrayList<>();//字段名
-            Map<String,String> nameTypeMap=new HashMap<>();//名字 类型映射
-            if(typeArray.length!=colunmCount-1){throw new BusinessException(BusinessCode.CRUD_QUERY_FAILURE,"得到的字段数量和类型数量不匹配 请检查sql和type"); }
-            //循环获取 字段名
-            for (int i = 0; i < colunmCount; i++) {
-                String name=resultSetMetaData.getColumnLabel(i+1);
-                if(name.equals("total")){}
-                else {
-                    names.add(name);
-                    nameTypeMap.put(name,typeArray[i-1]); }}
-            // 添加搜索-----------
-            sql=getSearchSQL(sql,request,nameTypeMap);
-            // 添加排序-----------
-            //sql=orderSQL(sql,nameTypeMap);
-            //重新搜索查找总数
-            countSQL=sql.toString().replaceFirst("(select|SELECT)","SELECT COUNT(*) as total,");
-            rs = stmt.executeQuery(countSQL);
-           //指针回到最初位置
-            rs.beforeFirst();
-            while (rs.next()){
-                //使用sql查找总数据行数
-                total= Long.parseLong( rs.getObject("total").toString());
-                //向上取整
-                pages=(long)Math.ceil((double)total/(double)size); }
-             //加入分页
-            sql.append(" limit "+((current-1)*size)+","+size);
-            System.out.println("最终执行的sql:    ");
-            System.out.println(sql);
-            //更改sql 查全部
-            rs = stmt.executeQuery(sql.toString());
-            while (rs.next()){
-                JSONObject pojoObject=new JSONObject();
-                for (String name:names) {
-                    //数据为空 则返回空
-                    if(rs.getObject(name)!=null){
-                        if("P".equals(nameTypeMap.get(name))){
-                            pojoObject.put(name,Float.parseFloat(rs.getObject(name).toString())*10000/100);
-                        }else
-                            pojoObject.put(name,rs.getObject(name).toString());
-                    }else {
-                        pojoObject.put(name,null);
-                    }
-                }
-                objList.add(pojoObject);
-            }
-            date.put("header",names);
-            date.put("rows",objList);
-            date.put("total",total);
-            date.put("size",size);
-            date.put("pages",pages);
-            date.put("current",current);
-            rs.close();
-            stmt.close();
-            connection.close();
-        } catch (SQLException e) {
-            throw new BusinessException(BusinessCode.CRUD_QUERY_FAILURE, e.getMessage());
+
+
+
+             if(metaTag.isEnableType()){
+                 if(typeArray.length!=colunmCount-1){throw new BusinessException(BusinessCode.CRUD_QUERY_FAILURE,"得到的字段数量和类型数量不匹配 请检查sql和type"); }
              }
-        return date;
+
+               //循环获取 字段名
+               for (int i = 0; i < colunmCount; i++) {
+                   String name=resultSetMetaData.getColumnLabel(i+1);
+                   if(name.equals("total")){}
+                   else {
+                       names.add(name);
+                       if(metaTag.isEnableType()) {
+                           nameTypeMap.put(name, typeArray[i - 1]);
+                       }
+                    }}
+
+               // 添加搜索SQL-----------
+               if(metaTag.isEnableType()) {
+               sql=getSearchSQL(sql,request,nameTypeMap);
+               }
+
+             // 添加排序-----------
+             //sql=orderSQL(sql,nameTypeMap);
+
+            //加入分页SQL
+            if(metaTag.isEnablePages()){
+                //重新搜索查找总数
+                countSQL=sql.toString().replaceFirst("(select|SELECT)","SELECT COUNT(*) as total,");
+                ResultSet rese = stmt.executeQuery(countSQL);
+                //指针回到最初位置
+                rese.beforeFirst();
+                while (rese.next()){
+                    //使用sql查找总数据行数
+                    total= Long.parseLong( rese.getObject("total").toString());
+                    //向上取整
+                    pages=(long)Math.ceil((double)total/(double)size);
+                    }
+                sql.append(" limit "+((current-1)*size)+","+size);
+                rese.close();
             }
+
+           System.out.println("最终执行的sql:    ");
+           System.out.println(sql);
+           //更改sql 查全部
+           rs = stmt.executeQuery(sql.toString());
+           while (rs.next()){
+               JSONObject pojoObject=new JSONObject();
+               for (String name:names) {
+                   //数据为空 则返回空
+                   if(rs.getObject(name)!=null){
+                       if( metaTag.isEnableType() && "P".equals(nameTypeMap.get(name))){
+                           pojoObject.put(name,Float.parseFloat(rs.getObject(name).toString())*10000/100);
+                       }else
+                           pojoObject.put(name,rs.getObject(name).toString());
+                   }else {
+                       pojoObject.put(name,null);
+                   }
+               }
+               objList.add(pojoObject);
+           }
+           rs.close();
+           stmt.close();
+           connection.close();
+            //字段名
+            if(metaTag.isEnableHead()){
+                data.put("header",names);
+            }
+
+           } catch (SQLException e) {
+               throw new BusinessException(BusinessCode.CRUD_QUERY_FAILURE, e.getMessage());
+           }
+
+           //分页相关
+           if(metaTag.isEnablePages()){
+               data.put("total",total);
+               data.put("size",size);
+               data.put("pages",pages);
+               data.put("current",current);
+           }
+
+
+           data.put("rows",objList);
+
+        return data;
+        }
 
 
 //拼接搜索sql
 public StringBuilder getSearchSQL(StringBuilder sql,HttpServletRequest request,Map<String,String> nameType){
-        if(nameType==null||nameType.size()==0) {
-            throw new BusinessException(BusinessCode.CRUD_QUERY_FAILURE, "名字类型映射为空");
-        }
-       else {
-            //无误处理sql
-            sql.insert(0,"select t.* from(");
-            sql.append(")t where 1=1 ");
-        }
+
+
+     sql.insert(0,"select t.* from(");
+     sql.append(")t where 1=1 ");
     String fieldRequest=null;
     String fieldRequests[]=null;
     String field=null;
