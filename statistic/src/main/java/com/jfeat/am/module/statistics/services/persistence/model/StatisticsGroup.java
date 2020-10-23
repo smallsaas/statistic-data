@@ -45,7 +45,7 @@ public class StatisticsGroup extends Model<StatisticsGroup> {
     /**
      * 分组排序号
      */
-	private Integer index;
+	private Integer idx;
 	/**
 	 * 分组描述
 	 */
@@ -104,13 +104,12 @@ public class StatisticsGroup extends Model<StatisticsGroup> {
 		this.span = span;
 	}
 
-	public Integer getIndex() {
-		return index;
+	public Integer getIdx() {
+		return idx;
 	}
 
-	public StatisticsGroup setIndex(Integer index) {
-		this.index = index;
-		return this;
+	public void setIdx(Integer idx) {
+		this.idx = idx;
 	}
 
 	public String getNote() {
@@ -152,7 +151,7 @@ public class StatisticsGroup extends Model<StatisticsGroup> {
 			", title=" + title +
 			", layout=" + layout +
 			", span=" + span +
-			", index=" + index +
+			", index=" + idx +
 			", note=" + note +
 				"}";
 	}

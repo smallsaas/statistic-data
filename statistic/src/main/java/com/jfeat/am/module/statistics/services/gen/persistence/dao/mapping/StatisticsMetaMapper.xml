@@ -14,11 +14,13 @@
 		<result column="search" property="search" />
 		<result column="permission" property="permission" />
 		<result column="tips" property="tips"/>
+		<result column="layout" property="layout"/>
+		<result column="span" property="span"/>
 	</resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, field, query_sql AS querySql, percent, icon, title, type, search, permission,tips
+        id, field, query_sql AS querySql, percent, icon, title, type, search, permission,tips,layout,span
     </sql>
 
 </mapper>

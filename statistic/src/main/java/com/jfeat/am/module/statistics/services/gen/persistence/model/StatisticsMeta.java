@@ -70,7 +70,27 @@ public class StatisticsMeta extends Model<StatisticsMeta> {
      */
 	private String permission;
 
+	private String layout;
+
+	private Integer span;
+
 	private String tips;
+
+	public Integer getSpan() {
+		return span;
+	}
+
+	public void setSpan(Integer span) {
+		this.span = span;
+	}
+
+	public String getLayout() {
+		return layout;
+	}
+
+	public void setLayout(String layout) {
+		this.layout = layout;
+	}
 
 	public String getTips() {
 		return tips;

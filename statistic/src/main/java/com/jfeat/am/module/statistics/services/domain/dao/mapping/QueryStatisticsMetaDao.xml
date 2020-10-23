@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.jfeat.am.module.statistics.services.domain.dao.QueryStatisticsMetaDao">
-        <sql id="Base_Column_List">
+    <sql id="Base_Column_List">
             st_statistics_meta.*
     </sql>
 
@@ -11,49 +11,48 @@
         </sql>
 
 
-                                    
     <select id="findStatisticsMetaPage" resultType="StatisticsMetaRecord" parameterType="StatisticsMetaRecord">
-            SELECT st_statistics_meta.*
+        SELECT st_statistics_meta.*
         FROM st_statistics_meta
-                WHERE 1=1
-                                                                            <if test="record.id != null and record.id>0 ">
-                AND st_statistics_meta.id LIKE CONCAT('%',#{record.id},'%')
-            </if>
-                                                                    <if test="record.field != null and record.field!= ''">
-                AND st_statistics_meta.field LIKE CONCAT('%',#{record.field},'%')
-            </if>
-                                                                    
-                                                                                        <if test="record.querySql != null and record.querySql!= ''">
-                AND st_statistics_meta.query_sql LIKE CONCAT('%',#{record.querySql},'%')
-            </if>
-                                                                    <if test="record.percent != null and record.percent>0 ">
-                AND st_statistics_meta.percent LIKE CONCAT('%',#{record.percent},'%')
-            </if>
-                                                                    <if test="record.icon != null and record.icon!= ''">
-                AND st_statistics_meta.icon LIKE CONCAT('%',#{record.icon},'%')
-            </if>
-                                                                    <if test="record.title != null and record.title!= ''">
-                AND st_statistics_meta.title LIKE CONCAT('%',#{record.title},'%')
-            </if>
-                                                                    <if test="record.type != null and record.type!= ''">
-                AND st_statistics_meta.type LIKE CONCAT('%',#{record.type},'%')
-            </if>
-                                                                    <if test="record.search != null and record.search!= ''">
-                AND st_statistics_meta.search LIKE CONCAT('%',#{record.search},'%')
-            </if>
-                                                                    <if test="record.permission != null and record.permission!= ''">
-                AND st_statistics_meta.permission LIKE CONCAT('%',#{record.permission},'%')
-            </if>
-                <if test="startTime != null">
+        WHERE 1=1
+        <if test="record.id != null and record.id>0 ">
+            AND st_statistics_meta.id LIKE CONCAT('%',#{record.id},'%')
+        </if>
+        <if test="record.field != null and record.field!= ''">
+            AND st_statistics_meta.field LIKE CONCAT('%',#{record.field},'%')
+        </if>
+
+        <if test="record.querySql != null and record.querySql!= ''">
+            AND st_statistics_meta.query_sql LIKE CONCAT('%',#{record.querySql},'%')
+        </if>
+        <if test="record.percent != null and record.percent>0 ">
+            AND st_statistics_meta.percent LIKE CONCAT('%',#{record.percent},'%')
+        </if>
+        <if test="record.icon != null and record.icon!= ''">
+            AND st_statistics_meta.icon LIKE CONCAT('%',#{record.icon},'%')
+        </if>
+        <if test="record.title != null and record.title!= ''">
+            AND st_statistics_meta.title LIKE CONCAT('%',#{record.title},'%')
+        </if>
+        <if test="record.type != null and record.type!= ''">
+            AND st_statistics_meta.type LIKE CONCAT('%',#{record.type},'%')
+        </if>
+        <if test="record.search != null and record.search!= ''">
+            AND st_statistics_meta.search LIKE CONCAT('%',#{record.search},'%')
+        </if>
+        <if test="record.permission != null and record.permission!= ''">
+            AND st_statistics_meta.permission LIKE CONCAT('%',#{record.permission},'%')
+        </if>
+        <if test="startTime != null">
             <![CDATA[AND st_statistics_meta.start_time >= DATE(#{startTime})]]>
         </if>
         <if test="endTime != null">
             <![CDATA[AND st_statistics_meta.end_time <= DATE(#{endTime)]]>
         </if>
-            <!--
-        <if test="search != null and search != ''">
-            OR st_statistics_meta.name LIKE CONCAT('%',#{search},'%')
-        </if>
-        -->
-                                    </select>
+        <!--
+    <if test="search != null and search != ''">
+        OR st_statistics_meta.name LIKE CONCAT('%',#{search},'%')
+    </if>
+    -->
+    </select>
 </mapper>

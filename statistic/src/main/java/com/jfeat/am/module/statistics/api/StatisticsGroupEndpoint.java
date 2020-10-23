@@ -68,7 +68,7 @@ public class StatisticsGroupEndpoint{
         if(subgroups.size()>0){
             // sort sub group first
             if(subgroups.size()>1) {
-                subgroups = subgroups.stream().sorted(Comparator.comparing(StatisticsGroup::getIndex)).collect(Collectors.toList());
+                subgroups = subgroups.stream().sorted(Comparator.comparing(StatisticsGroup::getIdx)).collect(Collectors.toList());
             }
 
             for (StatisticsGroup g : subgroups){
@@ -86,7 +86,7 @@ public class StatisticsGroupEndpoint{
             groupData.setTitle(statisticsGroup.getTitle());
             groupData.setLayout(statisticsGroup.getLayout());
             groupData.setSpan(statisticsGroup.getSpan());
-            groupData.setIndex(statisticsGroup.getIndex());
+            groupData.setIndex(statisticsGroup.getIdx());
 
         //每个域的数据
         List<StatisticsField> fields = statisticsGroupByService.getGroupItems(statisticsGroup.getId());

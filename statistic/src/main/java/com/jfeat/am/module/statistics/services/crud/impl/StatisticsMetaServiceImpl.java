@@ -14,6 +14,9 @@ import com.jfeat.crud.base.exception.BusinessCode;
 import com.jfeat.crud.base.exception.BusinessException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.sql.DataSource;
@@ -49,18 +52,32 @@ public class StatisticsMetaServiceImpl extends CRUDStatisticsMetaServiceImpl imp
         return null;
     }
 
+    //根据字段获取配置
+    @Override
+    public StatisticsMeta getStatisticsMetas(String field){
+        //根据field获取sql
+        List<StatisticsMeta> statisticsMetas = statisticsMetaMapper.selectList(new QueryWrapper<StatisticsMeta>().eq(StatisticsMeta.FIELD, field));
+        if(statisticsMetas!=null&&statisticsMetas.size()>0){
+            StatisticsMeta meta = statisticsMetas.get(0);
+            return meta;
+        }
+        else  {throw new BusinessException(BusinessCode.CRUD_QUERY_FAILURE,"查找不到field对应的Meta");}
+
+    }
+
     //根据field获取 json化的 表
     @Override
-    public  JSONObject getByField(String field, Long current, Long size, MetaTag metaTag, HttpServletRequest request){
+    public  JSONObject getByField(String field,  MetaTag metaTag){
+
+        HttpServletRequest request = ((ServletRequestAttributes) Objects
+                .requireNonNull(RequestContextHolder.getRequestAttributes())).getRequest();
 
         String[] typeArray=null;
         String[] searchArray=null;
         JSONObject data=new JSONObject();
         StringBuilder sql=new StringBuilder();
-            //根据field获取sql
-            List<StatisticsMeta> statisticsMetas = statisticsMetaMapper.selectList(new QueryWrapper<StatisticsMeta>().eq(StatisticsMeta.FIELD, field));
-            if(statisticsMetas!=null&&statisticsMetas.size()>0){
-                StatisticsMeta meta = statisticsMetas.get(0);
+
+        StatisticsMeta meta = getStatisticsMetas(field);
 
                 //是否启用Type
                 if(metaTag.isEnableType()){
@@ -85,24 +102,25 @@ public class StatisticsMetaServiceImpl extends CRUDStatisticsMetaServiceImpl imp
                     data.put("searchColumns",searchArray);
                 }
 
-
-
-                //整理sql执行
-                Map<String, String[]> parameterMap = request.getParameterMap();
-                //去除所有的‘;’防止拼接出错
-                sql.append(meta.getQuerySql().replaceAll(";",""));
-                //使用标签
-                sql=sqlSearchLabelService.getSQL(parameterMap,sql);
-                data = getTableInfo(data,typeArray, current, size, sql, metaTag, request);
-            }
-            else  {throw new BusinessException(BusinessCode.CRUD_QUERY_FAILURE,"查找不到field对应的Meta");}
+                sql.append(meta.getQuerySql());
+                data = getTableInfo(data,typeArray, sql, metaTag,"rows");
 
         return data;
       }
 
 
-    //countSQL 用于查询总记录数
-       public JSONObject getTableInfo(JSONObject data,String[] typeArray,Long current, Long size,StringBuilder sql ,MetaTag metaTag, HttpServletRequest request){
+        //countSQL 用于查询总记录数
+        @Override
+       public JSONObject getTableInfo(JSONObject data, String[] typeArray, StringBuilder sql, MetaTag metaTag,String rowsName){
+            HttpServletRequest request = ((ServletRequestAttributes) Objects
+                    .requireNonNull(RequestContextHolder.getRequestAttributes())).getRequest();
+
+            //整理sql执行
+            Map<String, String[]> parameterMap = request.getParameterMap();
+            //去除所有的‘;’防止拼接出错
+            sql=new StringBuilder(sql.toString().replaceAll(";",""));
+            //使用标签
+            sql=sqlSearchLabelService.getSQL(parameterMap,sql);
 
            String countSQL;
            //替换字符串 查找总数
@@ -161,9 +179,9 @@ public class StatisticsMetaServiceImpl extends CRUDStatisticsMetaServiceImpl imp
                     //使用sql查找总数据行数
                     total= Long.parseLong( rese.getObject("total").toString());
                     //向上取整
-                    pages=(long)Math.ceil((double)total/(double)size);
+                    pages=(long)Math.ceil((double)total/(double)metaTag.getSize());
                     }
-                sql.append(" limit "+((current-1)*size)+","+size);
+                sql.append(" limit "+((metaTag.getCurrent()-1)*metaTag.getSize())+","+metaTag.getSize());
                 rese.close();
             }
 
@@ -201,12 +219,10 @@ public class StatisticsMetaServiceImpl extends CRUDStatisticsMetaServiceImpl imp
            //分页相关
            if(metaTag.isEnablePages()){
                data.put("total",total);
-               data.put("size",size);
+               data.put("size",metaTag.getSize());
                data.put("pages",pages);
-               data.put("current",current);
+               data.put("current",metaTag.getCurrent());
            }
-
-
            data.put("rows",objList);
 
         return data;

@@ -8,6 +8,9 @@ public class MetaTag {
     private boolean enablePages;
     private boolean enableHead;
 
+    private Long current;
+    private Long size;
+
     public static final boolean flag = false;
 
    public MetaTag(){
@@ -16,6 +19,30 @@ public class MetaTag {
         this.enableType=flag;
         this.enablePages=flag;
         this.enableHead=flag;
+    }
+
+    public MetaTag(Boolean flag){
+        this.enableSearch=flag;
+        this.enableTips=flag;
+        this.enableType=flag;
+        this.enablePages=flag;
+        this.enableHead=flag;
+    }
+
+    public Long getCurrent() {
+        return current;
+    }
+
+    public void setCurrent(Long current) {
+        this.current = current;
+    }
+
+    public Long getSize() {
+        return size;
+    }
+
+    public void setSize(Long size) {
+        this.size = size;
     }
 
     public boolean isEnableSearch() {

@@ -1,9 +1,11 @@
 package com.jfeat.am.module.statistics.api;
 
 //import com.jfeat.am.module.log.annotation.BusinessLog;
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.jfeat.am.module.log.annotation.BusinessLog;
 import com.jfeat.am.module.statistics.api.model.MetaTag;
+import com.jfeat.am.module.statistics.services.crud.ExtendedStatistics;
 import com.jfeat.am.module.statistics.services.crud.StatisticsMetaService;
 import com.jfeat.am.module.statistics.services.domain.dao.QueryStatisticsMetaDao;
 import com.jfeat.am.module.statistics.services.domain.model.StatisticsMetaRecord;
@@ -33,8 +35,10 @@ public class MetaEndpoing {
     StatisticsMetaService statisticsMetaService;
     @Resource
     QueryStatisticsMetaDao queryStatisticsMetaDao;
+    @Resource
+    ExtendedStatistics extendedStatistics;
 
-    @ApiOperation("获取所有组")
+    @ApiOperation("根据字段获取报表")
     @GetMapping("/{field}")
     public Tip getConfigGroupList(@PathVariable String field,
                                   @RequestParam(name = "pageNum", required = false, defaultValue = "1") Long current,
@@ -43,6 +47,9 @@ public class MetaEndpoing {
                                   HttpServletRequest request
                                   ) {
         MetaTag metaTag = new MetaTag();
+
+        metaTag.setCurrent(current);
+        metaTag.setSize(size);
         if(pattern==null){
             metaTag.setEnableHead(true);
             metaTag.setEnablePages(true);
@@ -50,11 +57,19 @@ public class MetaEndpoing {
             metaTag.setEnableTips(true);
             metaTag.setEnableType(true);
         }else{
-
+            JSONObject data = new JSONObject();
+            switch (pattern){
+                case "count":case "Count": data=extendedStatistics.getCountTemplate(field);break;
+                case "Pie": case "pie" : data=extendedStatistics.getPieTemplate(field);break;
+                default : throw new BusinessException(BusinessCode.ErrorStatus,"该类型未配置");
+            }
+            return SuccessTip.create(data);
         }
 
-        return SuccessTip.create(statisticsMetaService.getByField(field,current,size,metaTag,request));
+        return SuccessTip.create(statisticsMetaService.getByField(field,metaTag));
     }
+
+
 
 
 

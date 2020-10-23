@@ -11,7 +11,7 @@ CREATE TABLE `st_statistics_group` (
   `layout` varchar(26) DEFAULT NULL COMMENT '布局名称',
   `title` varchar(26) DEFAULT NULL COMMENT '组标题',
   `span` smallint DEFAULT 1 COMMENT '子分组占父分组的列跨度',
-  `index` smallint DEFAULT 0 COMMENT '分组排序号',
+  `idx` smallint DEFAULT 0 COMMENT '分组排序号',
   `note` text DEFAULT NULL COMMENT '分组描述',
   UNIQUE(`name`),
   PRIMARY KEY (`id`)
@@ -80,6 +80,7 @@ CREATE TABLE `st_statistics_meta` (
   `type` varchar(50) DEFAULT NULL COMMENT '字段类型 D金钱  T时间  P百分比  C数量  S字符串 存储例子：D，D，T',
   `search` varchar(255) DEFAULT NULL COMMENT '搜索字段',
   `permission` varchar(50) DEFAULT NULL COMMENT '权限',
+  `layout` VARCHAR(26) DEFAULT null COMMENT '布局',
   `tips` text COMMENT '说明',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
