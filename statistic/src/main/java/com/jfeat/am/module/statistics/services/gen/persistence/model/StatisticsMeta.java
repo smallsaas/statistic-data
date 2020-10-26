@@ -76,6 +76,16 @@ public class StatisticsMeta extends Model<StatisticsMeta> {
 
 	private String tips;
 
+	private String chart;
+
+	public String getChart() {
+		return chart;
+	}
+
+	public void setChart(String chart) {
+		this.chart = chart;
+	}
+
 	public Integer getSpan() {
 		return span;
 	}

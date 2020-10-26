@@ -16,11 +16,12 @@
 		<result column="tips" property="tips"/>
 		<result column="layout" property="layout"/>
 		<result column="span" property="span"/>
+		<result column="chart" property="chart"/>
 	</resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, field, query_sql AS querySql, percent, icon, title, type, search, permission,tips,layout,span
+        id, field, query_sql AS querySql, percent, icon, title, type, search, permission,tips,layout,span,chart
     </sql>
 
 </mapper>

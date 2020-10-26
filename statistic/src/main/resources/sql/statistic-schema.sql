@@ -81,6 +81,7 @@ CREATE TABLE `st_statistics_meta` (
   `search` varchar(255) DEFAULT NULL COMMENT '搜索字段',
   `permission` varchar(50) DEFAULT NULL COMMENT '权限',
   `layout` VARCHAR(26) DEFAULT null COMMENT '布局',
+  `chart` VARCHAR(50) DEFAULT null COMMENT '组件',
   `tips` text COMMENT '说明',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

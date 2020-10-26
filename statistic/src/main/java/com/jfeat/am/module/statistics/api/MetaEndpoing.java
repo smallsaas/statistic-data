@@ -59,6 +59,7 @@ public class MetaEndpoing {
             switch (pattern){
                 case "count":case "Count": data=extendedStatistics.getCountTemplate(field);break;
                 case "Rate": case "rate" : data=extendedStatistics.getRateTemplate(field);break;
+                case "TimeLine": case "timeLine": data=extendedStatistics.getTimeLineTemplate(field);break;
                 default : throw new BusinessException(BusinessCode.ErrorStatus,"该类型未配置");
             }
             return SuccessTip.create(data);

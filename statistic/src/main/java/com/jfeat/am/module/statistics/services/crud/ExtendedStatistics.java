@@ -27,4 +27,6 @@ public interface ExtendedStatistics {
                         }
         * */
     JSONObject getRateTemplate(String field);
+
+    JSONObject getTimeLineTemplate(String field);
 }

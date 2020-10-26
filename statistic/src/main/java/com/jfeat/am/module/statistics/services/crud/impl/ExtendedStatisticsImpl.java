@@ -8,6 +8,7 @@ import com.jfeat.am.module.statistics.services.crud.ExtendedStatistics;
 import com.jfeat.am.module.statistics.services.crud.StatisticsMetaService;
 import com.jfeat.am.module.statistics.services.gen.persistence.model.StatisticsMeta;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -86,27 +87,28 @@ public class ExtendedStatisticsImpl implements ExtendedStatistics {
 
     }
 
-
+    @Override
     public JSONObject getTimeLineTemplate(String field){
         MetaTag mataTag= new MetaTag();
         JSONObject timeLine=new JSONObject();
-        JSONObject itemJSON=new JSONObject();
-
-
-        JSONArray items =new JSONArray();
 
         StatisticsMeta statisticsMetas = statisticsMetaService.getStatisticsMetas(field);
 
-        timeLine.put("layout",statisticsMetas.getLayout());
-        timeLine.put("span",statisticsMetas.getSpan());
-
-        timeLine.put("chart","BarGroup_2");
+        if(StringUtils.isEmpty(statisticsMetas.getChart())){
+            timeLine.put("chart","BarGroup_2");
+        }else{
+            timeLine.put("chart",statisticsMetas.getChart());
+        }
         timeLine.put("field",statisticsMetas.getField());
-
         timeLine.put("identifier","");
-        timeLine.put("pattern","");
         timeLine.put("name",statisticsMetas.getTitle());
+        timeLine.put("pattern","Rate");
+        timeLine.put("span",statisticsMetas.getSpan());
+        timeLine.put("title",statisticsMetas.getTitle());
         timeLine.put("tl","");
+
+        StringBuilder sql = new StringBuilder(statisticsMetas.getQuerySql());
+        timeLine = statisticsMetaService.getTableInfo(timeLine, null, sql, mataTag,"rates");
 
         return timeLine;
 
