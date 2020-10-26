@@ -16,6 +16,22 @@ SELECT field,record_name,record_time,
   max(case when field_name='field3' then value else 0 end) AS '文章名称'
 FROM st_statistic_record group by field, record_name, record_time;
 ```
+### 月度查询例子
+```sql
+select 	SUM(CASE WHEN MONTH(s.create_time) = 1 THEN 1 ELSE 0 END) as '一月',
+				SUM(CASE WHEN MONTH(s.create_time) = 2 THEN 1 ELSE 0 END) as '二月',
+				SUM(CASE WHEN MONTH(s.create_time) = 3 THEN 1 ELSE 0 END) as '三月',
+				SUM(CASE WHEN MONTH(s.create_time) = 4 THEN 1 ELSE 0 END) as '四月',
+				SUM(CASE WHEN MONTH(s.create_time) = 5 THEN 1 ELSE 0 END) as '五月',
+				SUM(CASE WHEN MONTH(s.create_time) = 6 THEN 1 ELSE 0 END) as '六月',
+				SUM(CASE WHEN MONTH(s.create_time) = 7 THEN 1 ELSE 0 END) as '七月',
+				SUM(CASE WHEN MONTH(s.create_time) = 8 THEN 1 ELSE 0 END) as '八月',
+				SUM(CASE WHEN MONTH(s.create_time) = 9 THEN 1 ELSE 0 END) as '九月',
+				SUM(CASE WHEN MONTH(s.create_time) = 10 THEN 1 ELSE 0 END) as '十月',
+				SUM(CASE WHEN MONTH(s.create_time) = 11 THEN 1 ELSE 0 END) as '十一月',
+				SUM(CASE WHEN MONTH(s.create_time) = 12 THEN 1 ELSE 0 END) as '十二月'
+FROM ca_adverting_plan AS s
+```
 
 #### 测试方式
 ```sql
@@ -27,3 +43,6 @@ select name,count as '排序' from t_sink ORDER BY `排序` DESC;
 
 DROP TABLE IF EXISTS t_sink;
 ```
+
+
+
