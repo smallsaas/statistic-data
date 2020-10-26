@@ -1,5 +1,6 @@
 ## statistic-data
-基于springboot的报表快速开发模块
+> 基于springboot的报表快速开发模块
+基于 [ECHART](https://echarts.apache.org/examples/zh/index.html) 图表展示
 
 ### 特性
 结合zero-element将统计报表可配置化。只需编写相应sql语句，即可通过相应配置做到展示统计图表，极大程度上减少了工作量。
