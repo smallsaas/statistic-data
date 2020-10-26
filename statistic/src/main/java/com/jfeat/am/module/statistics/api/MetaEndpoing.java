@@ -18,8 +18,6 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
-import org.apache.ibatis.annotations.Param;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.web.bind.annotation.*;
 
@@ -60,7 +58,7 @@ public class MetaEndpoing {
             JSONObject data = new JSONObject();
             switch (pattern){
                 case "count":case "Count": data=extendedStatistics.getCountTemplate(field);break;
-                case "Pie": case "pie" : data=extendedStatistics.getPieTemplate(field);break;
+                case "Rate": case "rate" : data=extendedStatistics.getRateTemplate(field);break;
                 default : throw new BusinessException(BusinessCode.ErrorStatus,"该类型未配置");
             }
             return SuccessTip.create(data);

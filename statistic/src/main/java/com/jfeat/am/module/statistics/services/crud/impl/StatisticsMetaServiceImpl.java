@@ -14,6 +14,7 @@ import com.jfeat.crud.base.exception.BusinessCode;
 import com.jfeat.crud.base.exception.BusinessException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -223,7 +224,13 @@ public class StatisticsMetaServiceImpl extends CRUDStatisticsMetaServiceImpl imp
                data.put("pages",pages);
                data.put("current",metaTag.getCurrent());
            }
-           data.put("rows",objList);
+           //结果列表
+           if(!StringUtils.isEmpty(rowsName)){
+               data.put(rowsName,objList);
+           }else{
+               data.put("rows",objList);
+           }
+
 
         return data;
         }

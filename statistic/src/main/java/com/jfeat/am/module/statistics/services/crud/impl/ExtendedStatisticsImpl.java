@@ -84,7 +84,7 @@ public class ExtendedStatisticsImpl implements ExtendedStatistics {
                     }
     * */
     @Override
-    public JSONObject getPieTemplate(String field){
+    public JSONObject getRateTemplate(String field){
         MetaTag mataTag= new MetaTag();
         JSONObject pie=new JSONObject();
 
@@ -92,7 +92,7 @@ public class ExtendedStatisticsImpl implements ExtendedStatistics {
         pie.put("field",field);
         pie.put("pattern","Rote");
         pie.put("title",statisticsMetas.getTitle());
-        pie.put("chart","BarTimeline");
+        pie.put("chart","Pie");
         if(statisticsMetas.getSpan()!=null){
             pie.put("span",statisticsMetas.getSpan());
         }

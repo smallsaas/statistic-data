@@ -26,5 +26,5 @@ public interface ExtendedStatistics {
                             ]
                         }
         * */
-    JSONObject getPieTemplate(String field);
+    JSONObject getRateTemplate(String field);
 }
