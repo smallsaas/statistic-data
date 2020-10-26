@@ -75,7 +75,12 @@ public class ExtendedStatisticsImpl implements ExtendedStatistics {
         pie.put("field",field);
         pie.put("pattern","Rote");
         pie.put("title",statisticsMetas.getTitle());
-        pie.put("chart","Pie");
+        if(StringUtils.isEmpty(statisticsMetas.getChart())){
+            pie.put("chart","Pie");
+        }else{
+            pie.put("chart",statisticsMetas.getChart());
+        }
+
         if(statisticsMetas.getSpan()!=null){
             pie.put("span",statisticsMetas.getSpan());
         }

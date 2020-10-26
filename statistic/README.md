@@ -155,3 +155,5 @@ CREATE TABLE `st_statistics_meta` (
 </dependency>
 
 ```
+
+- 总数-饼图-柱状图-报表SQL写法请看 [自定义报表-总数-饼图-柱状图-报表SQL普通编写.md](./自定义报表-总数-饼图-柱状图-报表SQL普通编写.md)
