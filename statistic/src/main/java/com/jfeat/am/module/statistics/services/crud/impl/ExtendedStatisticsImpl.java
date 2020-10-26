@@ -1,5 +1,6 @@
 package com.jfeat.am.module.statistics.services.crud.impl;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.jfeat.am.module.statistics.api.model.MetaTag;
@@ -63,26 +64,7 @@ public class ExtendedStatisticsImpl implements ExtendedStatistics {
         data = statisticsMetaService.getTableInfo(data, null, sql, mataTag,"rows");
         return data;
     }
-    /*
-    *  {
-                        "field": "pie",
-                        "pattern": "Rate",
-                        "identifier": "pie",
-                        "title": "pie图",
-                        "chart": "BarTimeline",
-                        "span": 1,
-                        "tl": null,
-                        "name": "pie图",
-                        "rates": [
-                            {
-                                "id": "pie",
-                                "name": "pie例子",
-                                "value": "20",
-                                "seq": 0
-                            }
-                        ]
-                    }
-    * */
+
     @Override
     public JSONObject getRateTemplate(String field){
         MetaTag mataTag= new MetaTag();
@@ -99,9 +81,34 @@ public class ExtendedStatisticsImpl implements ExtendedStatistics {
         pie.put("name",statisticsMetas.getTitle());
 
         StringBuilder sql = new StringBuilder(statisticsMetas.getQuerySql());
-        JSONObject data = statisticsMetaService.getTableInfo(pie, null, sql, mataTag,"rates");
-
+        pie = statisticsMetaService.getTableInfo(pie, null, sql, mataTag,"rates");
         return pie;
+
+    }
+
+
+    public JSONObject getTimeLineTemplate(String field){
+        MetaTag mataTag= new MetaTag();
+        JSONObject timeLine=new JSONObject();
+        JSONObject itemJSON=new JSONObject();
+
+
+        JSONArray items =new JSONArray();
+
+        StatisticsMeta statisticsMetas = statisticsMetaService.getStatisticsMetas(field);
+
+        timeLine.put("layout",statisticsMetas.getLayout());
+        timeLine.put("span",statisticsMetas.getSpan());
+
+        timeLine.put("chart","BarGroup_2");
+        timeLine.put("field",statisticsMetas.getField());
+
+        timeLine.put("identifier","");
+        timeLine.put("pattern","");
+        timeLine.put("name",statisticsMetas.getTitle());
+        timeLine.put("tl","");
+
+        return timeLine;
 
     }
 
