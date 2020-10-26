@@ -33,6 +33,19 @@ select 	SUM(CASE WHEN MONTH(s.create_time) = 1 THEN 1 ELSE 0 END) as '一月',
 FROM ca_adverting_plan AS s
 ```
 
+```SQL
+-- 本月之前（包括本月）之前12月
+SELECT DATE_FORMAT( @cdate := DATE_ADD( @cdate, INTERVAL + 1 MONTH ), '%Y-%m' ) AS month_list 
+FROM ( SELECT @cdate := DATE_ADD( CURRENT_DATE, INTERVAL - 12 MONTH ) FROM `pcd` LIMIT 12 ) t0 
+WHERE DATE( @cdate ) <= DATE_ADD( CURRENT_DATE, INTERVAL - 1 DAY ) 
+
+-- 今年1月到12月
+SELECT DATE_FORMAT( @cdate := DATE_ADD( @cdate, INTERVAL + 1 MONTH ), '%Y-%m' ) AS month_list 
+FROM ( SELECT @cdate := DATE_ADD( concat(year(now()),'-12-31'), INTERVAL - 12 MONTH ) FROM `pcd` LIMIT 12 ) t0 
+WHERE DATE( @cdate ) <= DATE_ADD( concat(year(now()),'-12-31'), INTERVAL - 1 DAY ) 
+
+```
+
 #### 测试方式
 ```sql
 DROP TABLE IF EXISTS t_sink;
