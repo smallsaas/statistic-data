@@ -30,7 +30,7 @@ public class ExtendedStatisticsImpl implements ExtendedStatistics {
         switch (pattern){
             case "count":case "Count": data=this.getCountTemplate(field);break;
             case "Rate": case "rate" : data=this.getRateTemplate(field);break;
-            case "TimeLine": case "timeLine": data=this.getTimeLineTemplate(field);break;
+            case "TimeLine": case "timeLine": case "timeline": data=this.getTimeLineTemplate(field);break;
             default : throw new BusinessException(BusinessCode.ErrorStatus,"该类型未配置");
         }
         return data;
@@ -45,7 +45,6 @@ public class ExtendedStatisticsImpl implements ExtendedStatistics {
             JSONObject chJson = this.getByPattern(templateChildren.getPattern(), templateChildren.getField());
             metaInfo.put(templateChildren.getField(),chJson);
         }
-
         return metaInfo;
     }
 
@@ -56,7 +55,7 @@ public class ExtendedStatisticsImpl implements ExtendedStatistics {
         JSONObject data=new JSONObject();
         StatisticsMeta statisticsMetas = statisticsMetaService.getStatisticsMetas(field);
         StringBuilder sql = new StringBuilder(statisticsMetas.getQuerySql());
-        data = statisticsMetaService.getTableInfo(data, null, sql, mataTag,"rows");
+        data = statisticsMetaService.getTableInfo(data, null, sql, mataTag,"rates");
         return data;
     }
 

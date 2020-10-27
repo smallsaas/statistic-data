@@ -85,3 +85,17 @@ CREATE TABLE `st_statistics_meta` (
   `tips` text COMMENT '说明',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- 自动报表分组表
+-- ----------------------------
+CREATE TABLE `st_statistics_meta_group` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `name` varchar(60) NOT NULL COMMENT '分组标识',
+  `pid` bigint(20) DEFAULT NULL,
+  `pattern` varchar(20) DEFAULT NULL COMMENT '自图标类型',
+  `span` int(11) DEFAULT NULL COMMENT '父span',
+  `layout` varchar(255) DEFAULT NULL COMMENT '布局json',
+  `title` varchar(80) DEFAULT NULL COMMENT '标题',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;

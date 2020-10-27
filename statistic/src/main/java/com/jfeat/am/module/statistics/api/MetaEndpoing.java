@@ -65,7 +65,7 @@ public class MetaEndpoing {
         return SuccessTip.create(statisticsMetaService.getByField(field,metaTag));
     }
 
-    @ApiOperation("根据字段获取报表")
+    @ApiOperation("获取分组报表，根据代码中已有配置")
     @GetMapping("/template/{templateName}")
     public Tip getConfigGroupList(@PathVariable String templateName, HttpServletRequest request) {
         try {
