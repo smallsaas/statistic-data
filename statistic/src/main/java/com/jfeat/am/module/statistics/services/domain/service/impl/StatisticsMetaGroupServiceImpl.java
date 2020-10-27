@@ -49,7 +49,14 @@ public class StatisticsMetaGroupServiceImpl extends CRUDStatisticsMetaGroupServi
     }
 
     public JSONObject setHead(JSONObject mgTemplate,StatisticsMetaGroup pGroup){
-        mgTemplate.put("layout",pGroup.getLayout());
+        String layout = pGroup.getLayout();
+        if(!StringUtils.isEmpty(layout)){
+            JSONObject jsonObject = JSONObject.parseObject(layout);
+            mgTemplate.put("layout",jsonObject);
+        }else{
+            mgTemplate.put("layout","");
+        }
+
         mgTemplate.put("span",pGroup.getSpan());
         mgTemplate.put("title",pGroup.getTitle());
         return mgTemplate;
