@@ -1,6 +1,7 @@
 package com.jfeat.am.module.statistics.api;
 
 //import com.jfeat.am.module.log.annotation.BusinessLog;
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.jfeat.am.module.log.annotation.BusinessLog;
@@ -11,6 +12,7 @@ import com.jfeat.am.module.statistics.services.crud.ExtendedStatistics;
 import com.jfeat.am.module.statistics.services.crud.StatisticsMetaService;
 import com.jfeat.am.module.statistics.services.domain.dao.QueryStatisticsMetaDao;
 import com.jfeat.am.module.statistics.services.domain.model.StatisticsMetaRecord;
+import com.jfeat.am.module.statistics.services.domain.service.StatisticsMetaGroupService;
 import com.jfeat.am.module.statistics.services.gen.persistence.model.StatisticsMeta;
 import com.jfeat.crud.base.exception.BusinessCode;
 import com.jfeat.crud.base.exception.BusinessException;
@@ -39,6 +41,8 @@ public class MetaEndpoing {
     QueryStatisticsMetaDao queryStatisticsMetaDao;
     @Resource
     ExtendedStatistics extendedStatistics;
+    @Resource
+    StatisticsMetaGroupService statisticsMetaGroupService;
 
     @ApiOperation("根据字段获取报表")
     @GetMapping("/{field}")
@@ -65,25 +69,12 @@ public class MetaEndpoing {
         return SuccessTip.create(statisticsMetaService.getByField(field,metaTag));
     }
 
-    @ApiOperation("获取分组报表，根据代码中已有配置")
-    @GetMapping("/template/{templateName}")
-    public Tip getConfigGroupList(@PathVariable String templateName, HttpServletRequest request) {
-        try {
-            Method method = TemplateSetting.class.getMethod("get" + templateName);
-            TemplateSetting templateSetting = new TemplateSetting();
-            method.setAccessible(true);
-            MetaGroupTemplate template = (MetaGroupTemplate) method.invoke(templateSetting);
-            JSONObject templateInfo = extendedStatistics.getBaseTemplate(template);
 
-            return SuccessTip.create(templateInfo);
-        } catch (NoSuchMethodException e) {
-            throw new BusinessException(BusinessCode.FileNotFound,"模板配置不存在");
-        } catch (IllegalAccessException e) {
-            throw new BusinessException(BusinessCode.FileNotFound,"IllegalAccessException 无访问权限");
-        } catch (InvocationTargetException e) {
-            throw new BusinessException(BusinessCode.FileNotFound,"InvocationTargetException 执行异常");
-        }
-
+    @ApiOperation("获取分组报表，获得已有配置")
+    @GetMapping("/template/{groupName}")
+    public Tip getConfigGroupList(@PathVariable String groupName, HttpServletRequest request) {
+            JSONObject template = statisticsMetaGroupService.getTemplateByName(groupName);
+            return SuccessTip.create(template);
     }
 
 

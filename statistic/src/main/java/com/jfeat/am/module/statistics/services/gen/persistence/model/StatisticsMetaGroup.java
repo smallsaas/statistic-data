@@ -34,7 +34,26 @@ public class StatisticsMetaGroup extends Model<StatisticsMetaGroup> {
 
     private String title;
 
-    
+    private String field;
+
+    private String presenter;
+
+    public String getPresenter() {
+        return presenter;
+    }
+
+    public void setPresenter(String presenter) {
+        this.presenter = presenter;
+    }
+
+    public String getField() {
+        return field;
+    }
+
+    public void setField(String field) {
+        this.field = field;
+    }
+
     public Long getId() {
         return id;
     }

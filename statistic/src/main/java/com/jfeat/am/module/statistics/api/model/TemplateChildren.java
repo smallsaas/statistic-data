@@ -2,10 +2,10 @@ package com.jfeat.am.module.statistics.api.model;
 
 public class TemplateChildren {
 
-    public TemplateChildren(String presenter,String field,String pattern){
+    public TemplateChildren(String presenter,String field){
         this.presenter = presenter;
         this.field = field;
-        this.pattern=pattern;
+
     }
 
     //前端组件名
@@ -13,15 +13,6 @@ public class TemplateChildren {
     //域
     private String field;
 
-    private String pattern;
-
-    public String getPattern() {
-        return pattern;
-    }
-
-    public void setPattern(String pattern) {
-        this.pattern = pattern;
-    }
 
     public String getPresenter() {
         return presenter;

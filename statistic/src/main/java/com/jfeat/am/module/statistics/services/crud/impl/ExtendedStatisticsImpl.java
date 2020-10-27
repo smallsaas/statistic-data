@@ -36,17 +36,7 @@ public class ExtendedStatisticsImpl implements ExtendedStatistics {
         return data;
     }
 
-    @Override
-    public JSONObject getBaseTemplate(MetaGroupTemplate metaGroupTemplate){
-        String string = JSON.toJSONString(metaGroupTemplate);
-        JSONObject metaInfo = (JSONObject) JSON.parse(string);
-        List<TemplateChildren> childrenList = metaGroupTemplate.getChildren();
-        for (TemplateChildren templateChildren:childrenList){
-            JSONObject chJson = this.getByPattern(templateChildren.getPattern(), templateChildren.getField());
-            metaInfo.put(templateChildren.getField(),chJson);
-        }
-        return metaInfo;
-    }
+
 
     @Override
     public JSONObject getCountTemplate(String field){

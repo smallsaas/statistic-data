@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.jfeat.am.module.statistics.services.domain.dao.QueryStatisticsMetaGroupDao">
-                                                                                                                                                                                                                                                                        <sql id="Base_Column_List">
-                                                                                                                                                                                                                                                                                                                                                                                                                                st_statistics_meta_group.id, st_statistics_meta_group.name, st_statistics_meta_group.pid, st_statistics_meta_group.pattern, st_statistics_meta_group.span, st_statistics_meta_group.layout, st_statistics_meta_group.title
+    <sql id="Base_Column_List">
+        st_statistics_meta_group.id, st_statistics_meta_group.name, st_statistics_meta_group.pid, st_statistics_meta_group.pattern, st_statistics_meta_group.span, st_statistics_meta_group.layout
+        , st_statistics_meta_group.title
+        ,st_statistics_meta_group.field
+        ,st_statistics_meta_group.presenter
     </sql>
 
-    
+
     <select id="queryMasterModel" resultType="StatisticsMetaGroupModel">
        SELECT st_statistics_meta_group.*
        FROM st_statistics_meta_group
@@ -14,43 +17,44 @@
     </select>
 
 
-                            
-    <select id="findStatisticsMetaGroupPage" resultType="StatisticsMetaGroupRecord" parameterType="StatisticsMetaGroupRecord">
-            SELECT <include refid="Base_Column_List"/>
+    <select id="findStatisticsMetaGroupPage" resultType="StatisticsMetaGroupRecord"
+            parameterType="StatisticsMetaGroupRecord">
+        SELECT
+        <include refid="Base_Column_List"/>
 
         FROM st_statistics_meta_group
-                WHERE 1=1
-                                                                            <if test="record.id != null and record.id>0 ">
-                                    AND st_statistics_meta_group.id LIKE CONCAT('%',#{record.id},'%')
-                            </if>
-                                                                    <if test="record.name != null and record.name!= ''">
-                                    AND st_statistics_meta_group.name LIKE CONCAT('%',#{record.name},'%')
-                            </if>
-                                                                    <if test="record.pid != null and record.pid>0 ">
-                                    AND st_statistics_meta_group.pid LIKE CONCAT('%',#{record.pid},'%')
-                            </if>
-                                                                    <if test="record.pattern != null and record.pattern!= ''">
-                                    AND st_statistics_meta_group.pattern LIKE CONCAT('%',#{record.pattern},'%')
-                            </if>
-                                                                    <if test="record.span != null and record.span>0 ">
-                                    AND st_statistics_meta_group.span LIKE CONCAT('%',#{record.span},'%')
-                            </if>
-                                                                    <if test="record.layout != null and record.layout!= ''">
-                                    AND st_statistics_meta_group.layout LIKE CONCAT('%',#{record.layout},'%')
-                            </if>
-                                                                    <if test="record.title != null and record.title!= ''">
-                                    AND st_statistics_meta_group.title LIKE CONCAT('%',#{record.title},'%')
-                            </if>
-                <if test="startTime != null">
+        WHERE 1=1
+        <if test="record.id != null and record.id>0 ">
+            AND st_statistics_meta_group.id LIKE CONCAT('%',#{record.id},'%')
+        </if>
+        <if test="record.name != null and record.name!= ''">
+            AND st_statistics_meta_group.name LIKE CONCAT('%',#{record.name},'%')
+        </if>
+        <if test="record.pid != null and record.pid>0 ">
+            AND st_statistics_meta_group.pid LIKE CONCAT('%',#{record.pid},'%')
+        </if>
+        <if test="record.pattern != null and record.pattern!= ''">
+            AND st_statistics_meta_group.pattern LIKE CONCAT('%',#{record.pattern},'%')
+        </if>
+        <if test="record.span != null and record.span>0 ">
+            AND st_statistics_meta_group.span LIKE CONCAT('%',#{record.span},'%')
+        </if>
+        <if test="record.layout != null and record.layout!= ''">
+            AND st_statistics_meta_group.layout LIKE CONCAT('%',#{record.layout},'%')
+        </if>
+        <if test="record.title != null and record.title!= ''">
+            AND st_statistics_meta_group.title LIKE CONCAT('%',#{record.title},'%')
+        </if>
+        <if test="startTime != null">
             <![CDATA[AND st_statistics_meta_group.start_time >= DATE(#{startTime})]]>
         </if>
         <if test="endTime != null">
             <![CDATA[AND st_statistics_meta_group.end_time <= DATE(#{endTime}]]>
         </if>
-            <!--
-        <if test="search != null and search != ''">
-            OR st_statistics_meta_group.name LIKE CONCAT('%',#{search},'%')
-        </if>
-        -->
-                                    </select>
+        <!--
+    <if test="search != null and search != ''">
+        OR st_statistics_meta_group.name LIKE CONCAT('%',#{search},'%')
+    </if>
+    -->
+    </select>
 </mapper>

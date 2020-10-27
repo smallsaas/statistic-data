@@ -11,11 +11,13 @@
         <result column="span" property="span" />
         <result column="layout" property="layout" />
         <result column="title" property="title" />
+        <result column="field" property="field" />
+        <result column="presenter" property="presenter" />
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, name, pid, pattern, span, layout, title
+        id, name, pid, pattern, span, layout, title,field,presenter
     </sql>
 
 </mapper>
