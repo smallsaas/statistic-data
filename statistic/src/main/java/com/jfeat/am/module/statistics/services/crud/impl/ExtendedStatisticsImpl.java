@@ -1,12 +1,17 @@
 package com.jfeat.am.module.statistics.services.crud.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.jfeat.am.module.statistics.api.model.MetaGroupTemplate;
 import com.jfeat.am.module.statistics.api.model.MetaTag;
+import com.jfeat.am.module.statistics.api.model.TemplateChildren;
 import com.jfeat.am.module.statistics.services.crud.ExtendedStatistics;
 import com.jfeat.am.module.statistics.services.crud.StatisticsMetaService;
 import com.jfeat.am.module.statistics.services.gen.persistence.model.StatisticsMeta;
+import com.jfeat.crud.base.exception.BusinessCode;
+import com.jfeat.crud.base.exception.BusinessException;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -19,40 +24,29 @@ public class ExtendedStatisticsImpl implements ExtendedStatistics {
     @Resource
     StatisticsMetaService statisticsMetaService;
 
-    //返回最基础的模板
-    /**
-     * 		"title": "订单统计"
-     * 		"layout": {"name":"Grid", "props":{}},
-     * 		"span": 1,
-     *        "children":
-     *        [
-     *           {
-     *              "presenter":"titledTotal",
-     *              "field":"total:today:all@stat:product",
-     *           },
-     *           {
-     * 			 "presenter":" titledClusterTotal",
-     *              "field":"total:today:all@stat:product"
-     *           },
-     *        ]
-     * 		"total:today:all@stat:product": {…}
-     * 		"total:curmon:count@stat:order:count": {…}
-     */
-    public JSONObject getBaseTemplate(String field){
-        JSONObject template=new JSONObject();
-        StatisticsMeta statisticsMetas = statisticsMetaService.getStatisticsMetas(field);
-        //标题
-        template.put("title",statisticsMetas.getTitle());
-        //布局
-        if(statisticsMetas.getLayout()!=null){
-            template.put("layout",statisticsMetas.getLayout());
+    @Override
+    public JSONObject getByPattern(String pattern,String field){
+        JSONObject data = new JSONObject();
+        switch (pattern){
+            case "count":case "Count": data=this.getCountTemplate(field);break;
+            case "Rate": case "rate" : data=this.getRateTemplate(field);break;
+            case "TimeLine": case "timeLine": data=this.getTimeLineTemplate(field);break;
+            default : throw new BusinessException(BusinessCode.ErrorStatus,"该类型未配置");
         }
-        //子分组占父分组的列跨度
-        if(statisticsMetas.getSpan()!=null){
-            template.put("span",statisticsMetas.getSpan());
+        return data;
+    }
+
+    @Override
+    public JSONObject getBaseTemplate(MetaGroupTemplate metaGroupTemplate){
+        String string = JSON.toJSONString(metaGroupTemplate);
+        JSONObject metaInfo = (JSONObject) JSON.parse(string);
+        List<TemplateChildren> childrenList = metaGroupTemplate.getChildren();
+        for (TemplateChildren templateChildren:childrenList){
+            JSONObject chJson = this.getByPattern(templateChildren.getPattern(), templateChildren.getField());
+            metaInfo.put(templateChildren.getField(),chJson);
         }
-        //
-        return template;
+
+        return metaInfo;
     }
 
     @Override

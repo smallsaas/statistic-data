@@ -4,7 +4,9 @@ package com.jfeat.am.module.statistics.api;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.jfeat.am.module.log.annotation.BusinessLog;
+import com.jfeat.am.module.statistics.api.model.MetaGroupTemplate;
 import com.jfeat.am.module.statistics.api.model.MetaTag;
+import com.jfeat.am.module.statistics.api.template.TemplateSetting;
 import com.jfeat.am.module.statistics.services.crud.ExtendedStatistics;
 import com.jfeat.am.module.statistics.services.crud.StatisticsMetaService;
 import com.jfeat.am.module.statistics.services.domain.dao.QueryStatisticsMetaDao;
@@ -23,6 +25,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 @Api("统计 [Statistics] meta")
 @RestController
@@ -55,17 +59,31 @@ public class MetaEndpoing {
             metaTag.setEnableTips(true);
             metaTag.setEnableType(true);
         }else{
-            JSONObject data = new JSONObject();
-            switch (pattern){
-                case "count":case "Count": data=extendedStatistics.getCountTemplate(field);break;
-                case "Rate": case "rate" : data=extendedStatistics.getRateTemplate(field);break;
-                case "TimeLine": case "timeLine": data=extendedStatistics.getTimeLineTemplate(field);break;
-                default : throw new BusinessException(BusinessCode.ErrorStatus,"该类型未配置");
-            }
+            JSONObject  data = extendedStatistics.getByPattern(pattern,field);
             return SuccessTip.create(data);
         }
-
         return SuccessTip.create(statisticsMetaService.getByField(field,metaTag));
+    }
+
+    @ApiOperation("根据字段获取报表")
+    @GetMapping("/template/{templateName}")
+    public Tip getConfigGroupList(@PathVariable String templateName, HttpServletRequest request) {
+        try {
+            Method method = TemplateSetting.class.getMethod("get" + templateName);
+            TemplateSetting templateSetting = new TemplateSetting();
+            method.setAccessible(true);
+            MetaGroupTemplate template = (MetaGroupTemplate) method.invoke(templateSetting);
+            JSONObject templateInfo = extendedStatistics.getBaseTemplate(template);
+
+            return SuccessTip.create(templateInfo);
+        } catch (NoSuchMethodException e) {
+            throw new BusinessException(BusinessCode.FileNotFound,"模板配置不存在");
+        } catch (IllegalAccessException e) {
+            throw new BusinessException(BusinessCode.FileNotFound,"IllegalAccessException 无访问权限");
+        } catch (InvocationTargetException e) {
+            throw new BusinessException(BusinessCode.FileNotFound,"InvocationTargetException 执行异常");
+        }
+
     }
 
 
