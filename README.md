@@ -9,14 +9,20 @@
 zero-data目前仅作为单独模块提供API支持，使用/api/stat/groups/{group}接口获取数据，通过identifier参数进行数据筛选。
 
 
-### 统计SQL写法参考
+### 状态统计查询例子
 ```sql
-SELECT field,record_name,record_time,
-  max(case when field_name='field1' then value else 0 end) AS '点赞数',
-  max(case when field_name='field2' then value else 0 end) AS '阅读数',
-  max(case when field_name='field3' then value else 0 end) AS '文章名称'
-FROM st_statistic_record group by field, record_name, record_time;
+SELECT (CASE 
+           WHEN t.status='DELIVERING' THEN '执行中',
+           WHEN t.status='DELIVERED' THEN '已下发',
+           WHEN t.status='CONFIRMING' THEN '待确认',
+           WHEN t.status='VERIFIED' THEN '已确认',
+           WHEN t.status='CLOSED' THEN '已关闭' 
+	END）as name,
+	COUNT(*) as value
+FROM t_task_order t
+GROUP BY t.status
 ```
+
 ### 月度查询例子
 ```sql
 select 	SUM(CASE WHEN MONTH(s.create_time) = 1 THEN 1 ELSE 0 END) as '一月',
