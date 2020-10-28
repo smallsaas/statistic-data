@@ -7,6 +7,7 @@
         ,st_statistics_meta_group.field
         ,st_statistics_meta_group.presenter
         ,api_return as apiReturn
+        ,seq
     </sql>
 
 

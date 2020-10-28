@@ -13,8 +13,8 @@ public class TemplateSetting {
         templateConfig.setTitle("广告主报表");
         templateConfig.setSpan(1);
 
-        TemplateChildren templateChildren = new TemplateChildren("titledTotal","advertiserTotal");
-        TemplateChildren templateChildren2 = new TemplateChildren("TimeLine","mon");
+        TemplateChildren templateChildren = new TemplateChildren("titledTotal","advertiserTotal",1);
+        TemplateChildren templateChildren2 = new TemplateChildren("TimeLine","mon",1);
         List<TemplateChildren> templateChildrenList = List.of(templateChildren,templateChildren2);
         templateConfig.setChildren(templateChildrenList);
 

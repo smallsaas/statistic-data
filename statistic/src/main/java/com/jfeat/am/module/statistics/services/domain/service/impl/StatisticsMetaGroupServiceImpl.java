@@ -19,6 +19,7 @@ import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -76,15 +77,17 @@ public class StatisticsMetaGroupServiceImpl extends CRUDStatisticsMetaGroupServi
                 JSONObject pJSON = setBody(new JSONObject(), statisticsMetaGroup.getId(),metaTag);
                 pJSON = setHead(pJSON, statisticsMetaGroup);
                 mgTemplate.put(statisticsMetaGroup.getName(), pJSON);
-                TemplateChildren templateChildren = new TemplateChildren(statisticsMetaGroup.getPresenter(), statisticsMetaGroup.getName());
+                TemplateChildren templateChildren = new TemplateChildren(statisticsMetaGroup.getPresenter(), statisticsMetaGroup.getName(),statisticsMetaGroup.getSeq());
                 templateChildrenList.add(templateChildren);
             } else {
                 //处理子类
-                TemplateChildren templateChildren = new TemplateChildren(statisticsMetaGroup.getPresenter(), statisticsMetaGroup.getField());
+                TemplateChildren templateChildren = new TemplateChildren(statisticsMetaGroup.getPresenter(), statisticsMetaGroup.getField(),statisticsMetaGroup.getSeq());
                 templateChildrenList.add(templateChildren);
                 putChindrenJSON(mgTemplate, templateChildren, statisticsMetaGroup.getApiReturn(),metaTag);
             }
         }
+        //列表排序
+        templateChildrenList.sort(Comparator.comparingInt(TemplateChildren::getSeq));
         mgTemplate.put("children", templateChildrenList);
 
         return mgTemplate;

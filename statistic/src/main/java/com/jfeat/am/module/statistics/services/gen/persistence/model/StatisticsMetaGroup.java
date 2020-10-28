@@ -39,8 +39,19 @@ public class StatisticsMetaGroup extends Model<StatisticsMetaGroup> {
 
     private String presenter;
 
+    private Integer seq;
+
+
 
     private String apiReturn;
+
+    public Integer getSeq() {
+        return seq;
+    }
+
+    public void setSeq(Integer seq) {
+        this.seq = seq;
+    }
 
     public String getApiReturn() {
         return apiReturn;

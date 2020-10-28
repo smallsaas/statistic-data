@@ -14,11 +14,12 @@
         <result column="field" property="field" />
         <result column="presenter" property="presenter" />
         <result column="api_return" property="apiReturn" />
+        <result column="seq" property="seq" />
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, name, pid, pattern, span, layout, title,field,presenter,api_return as apiReturn
+        id, name, pid, pattern, span, layout, title,field,presenter,api_return as apiReturn,seq
     </sql>
 
 </mapper>
