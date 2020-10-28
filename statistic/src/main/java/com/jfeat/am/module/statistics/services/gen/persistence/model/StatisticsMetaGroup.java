@@ -1,5 +1,6 @@
 package com.jfeat.am.module.statistics.services.gen.persistence.model;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
@@ -37,6 +38,17 @@ public class StatisticsMetaGroup extends Model<StatisticsMetaGroup> {
     private String field;
 
     private String presenter;
+
+
+    private String apiReturn;
+
+    public String getApiReturn() {
+        return apiReturn;
+    }
+
+    public void setApiReturn(String apiReturn) {
+        this.apiReturn = apiReturn;
+    }
 
     public String getPresenter() {
         return presenter;

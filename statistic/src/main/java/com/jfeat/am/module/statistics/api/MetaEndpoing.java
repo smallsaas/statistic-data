@@ -48,25 +48,13 @@ public class MetaEndpoing {
     @GetMapping("/{field}")
     public Tip getConfigGroupList(@PathVariable String field,
                                   @RequestParam(name = "pageNum", required = false, defaultValue = "1") Long current,
-                                  @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long size,
-                                  @RequestParam(name = "pattern", required = false) String pattern,
-                                  HttpServletRequest request
+                                  @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long size
                                   ) {
         MetaTag metaTag = new MetaTag();
-
         metaTag.setCurrent(current);
         metaTag.setSize(size);
-        if(pattern==null){
-            metaTag.setEnableHead(true);
-            metaTag.setEnablePages(true);
-            metaTag.setEnableSearch(true);
-            metaTag.setEnableTips(true);
-            metaTag.setEnableType(true);
-        }else{
-            JSONObject  data = extendedStatistics.getByPattern(pattern,field);
-            return SuccessTip.create(data);
-        }
-        return SuccessTip.create(statisticsMetaService.getByField(field,metaTag));
+        JSONObject  data = extendedStatistics.getByPattern(field,metaTag);
+        return SuccessTip.create(data);
     }
 
 

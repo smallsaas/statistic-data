@@ -25,14 +25,27 @@ public class ExtendedStatisticsImpl implements ExtendedStatistics {
     StatisticsMetaService statisticsMetaService;
 
     @Override
-    public JSONObject getByPattern(String pattern,String field){
+    public JSONObject getByPattern(String field,MetaTag metaTag){
         JSONObject data = new JSONObject();
-        switch (pattern){
-            case "count":case "Count": data=this.getCountTemplate(field);break;
-            case "Rate": case "rate" : data=this.getRateTemplate(field);break;
-            case "TimeLine": case "timeLine": case "timeline": data=this.getTimeLineTemplate(field);break;
-            default : throw new BusinessException(BusinessCode.ErrorStatus,"该类型未配置");
+        StatisticsMeta statisticsMetas = statisticsMetaService.getStatisticsMetas(field);
+        String pattern = statisticsMetas.getPattern();
+        if(pattern==null){
+            metaTag.setEnableHead(true);
+            metaTag.setEnablePages(true);
+            metaTag.setEnableSearch(true);
+            metaTag.setEnableTips(true);
+            metaTag.setEnableType(true);
+            data=statisticsMetaService.getByField(field,metaTag);
+        }else{
+            switch (pattern){
+                case "count":case "Count": data=this.getCountTemplate(field);break;
+                case "Rate": case "rate" : data=this.getRateTemplate(field);break;
+                case "TimeLine": case "timeLine": case "timeline": data=this.getTimeLineTemplate(field);break;
+                default : throw new BusinessException(BusinessCode.ErrorStatus,"该类型未配置");
+            }
         }
+
+
         return data;
     }
 

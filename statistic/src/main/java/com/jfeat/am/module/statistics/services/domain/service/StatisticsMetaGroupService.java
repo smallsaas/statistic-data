@@ -12,5 +12,5 @@ public interface StatisticsMetaGroupService extends CRUDStatisticsMetaGroupServi
 
     JSONObject getTemplateByName(String groupName);
 
-    JSONObject putChindrenJSON(JSONObject template, TemplateChildren children, String pattern);
+    JSONObject putChindrenJSON(JSONObject template, TemplateChildren children, String apiReturn);
 }

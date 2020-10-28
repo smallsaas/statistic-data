@@ -78,6 +78,16 @@ public class StatisticsMeta extends Model<StatisticsMeta> {
 
 	private String chart;
 
+	private String pattern;
+
+	public String getPattern() {
+		return pattern;
+	}
+
+	public void setPattern(String pattern) {
+		this.pattern = pattern;
+	}
+
 	public String getChart() {
 		return chart;
 	}
