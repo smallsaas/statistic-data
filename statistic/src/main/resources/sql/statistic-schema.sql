@@ -82,6 +82,7 @@ CREATE TABLE `st_statistics_meta` (
   `permission` varchar(50) DEFAULT NULL COMMENT '权限',
   `layout` VARCHAR(26) DEFAULT null COMMENT '布局',
   `chart` VARCHAR(50) DEFAULT null COMMENT '组件',
+  pattern varchar(30) DEFAULT null,
   `tips` text COMMENT '说明',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -99,5 +100,6 @@ CREATE TABLE `st_statistics_meta_group` (
   `title` varchar(80) DEFAULT NULL COMMENT '标题',
    `field` varchar(80) DEFAULT NULL,
   `presenter` varchar(80) DEFAULT NULL,
+  `api_return` varchar(5) default '0',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
