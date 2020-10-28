@@ -46,7 +46,7 @@ public class MetaEndpoing {
 
     @ApiOperation("根据字段获取报表")
     @GetMapping("/{field}")
-    public Tip getConfigGroupList(@PathVariable String field,
+    public Tip getConfigList(@PathVariable String field,
                                   @RequestParam(name = "pageNum", required = false, defaultValue = "1") Long current,
                                   @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long size
                                   ) {
@@ -60,8 +60,13 @@ public class MetaEndpoing {
 
     @ApiOperation("获取分组报表，获得已有配置")
     @GetMapping("/template/{groupName}")
-    public Tip getConfigGroupList(@PathVariable String groupName, HttpServletRequest request) {
-            JSONObject template = statisticsMetaGroupService.getTemplateByName(groupName);
+    public Tip getConfigGroupList(@PathVariable String groupName,
+                                  @RequestParam(name = "pageNum", required = false, defaultValue = "1") Long current,
+                                  @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long size) {
+            MetaTag metaTag = new MetaTag();
+            metaTag.setCurrent(current);
+            metaTag.setSize(size);
+            JSONObject template = statisticsMetaGroupService.getTemplateByName(groupName,metaTag);
             return SuccessTip.create(template);
     }
 

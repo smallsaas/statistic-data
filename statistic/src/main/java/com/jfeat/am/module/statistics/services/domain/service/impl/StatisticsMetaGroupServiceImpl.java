@@ -66,14 +66,14 @@ public class StatisticsMetaGroupServiceImpl extends CRUDStatisticsMetaGroupServi
         return mgTemplate;
     }
 
-    public JSONObject setBody(JSONObject mgTemplate, Long pid) {
+    public JSONObject setBody(JSONObject mgTemplate, Long pid,MetaTag metaTag) {
         List<StatisticsMetaGroup> sonList = smgMapper.selectList(new QueryWrapper<StatisticsMetaGroup>().eq("pid", pid));
 
         List<TemplateChildren> templateChildrenList = new ArrayList<>();
 
         for (StatisticsMetaGroup statisticsMetaGroup : sonList) {
             if (StringUtils.isEmpty(statisticsMetaGroup.getField())) {
-                JSONObject pJSON = setBody(new JSONObject(), statisticsMetaGroup.getId());
+                JSONObject pJSON = setBody(new JSONObject(), statisticsMetaGroup.getId(),metaTag);
                 pJSON = setHead(pJSON, statisticsMetaGroup);
                 mgTemplate.put(statisticsMetaGroup.getName(), pJSON);
                 TemplateChildren templateChildren = new TemplateChildren(statisticsMetaGroup.getPresenter(), statisticsMetaGroup.getName());
@@ -82,7 +82,7 @@ public class StatisticsMetaGroupServiceImpl extends CRUDStatisticsMetaGroupServi
                 //处理子类
                 TemplateChildren templateChildren = new TemplateChildren(statisticsMetaGroup.getPresenter(), statisticsMetaGroup.getField());
                 templateChildrenList.add(templateChildren);
-                putChindrenJSON(mgTemplate, templateChildren, statisticsMetaGroup.getApiReturn());
+                putChindrenJSON(mgTemplate, templateChildren, statisticsMetaGroup.getApiReturn(),metaTag);
             }
         }
         mgTemplate.put("children", templateChildrenList);
@@ -91,21 +91,21 @@ public class StatisticsMetaGroupServiceImpl extends CRUDStatisticsMetaGroupServi
     }
 
     @Override
-    public JSONObject getTemplateByName(String groupName) {
+    public JSONObject getTemplateByName(String groupName,MetaTag metaTag) {
         StatisticsMetaGroup pGroup = getPGroup(groupName);
         JSONObject templateJSON = new JSONObject();
         templateJSON = setHead(templateJSON, pGroup);
-        templateJSON = setBody(templateJSON, pGroup.getId());
+        templateJSON = setBody(templateJSON, pGroup.getId(),metaTag);
         return templateJSON;
     }
 
 
     @Override
-    public JSONObject putChindrenJSON(JSONObject template, TemplateChildren children, String apiReturn) {
+    public JSONObject putChindrenJSON(JSONObject template, TemplateChildren children, String apiReturn,MetaTag metaTag) {
 
         JSONObject chJson = new JSONObject();
         if (ApiReturn.API_JSON.equals(apiReturn.trim())) {
-            chJson = extendedStatistics.getByPattern(children.getField(),new MetaTag());
+            chJson = extendedStatistics.getByPattern(children.getField(),metaTag);
 
         } else {
             StringBuilder sb = new StringBuilder(META_API_URL);
