@@ -12,6 +12,8 @@ import com.jfeat.am.module.statistics.services.crud.StatisticsMetaService;
 import com.jfeat.am.module.statistics.services.gen.persistence.model.StatisticsMeta;
 import com.jfeat.crud.base.exception.BusinessCode;
 import com.jfeat.crud.base.exception.BusinessException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -20,6 +22,8 @@ import java.util.List;
 
 @Service
 public class ExtendedStatisticsImpl implements ExtendedStatistics {
+
+    private static final Logger logger = LoggerFactory.getLogger(ExtendedStatisticsImpl.class);
 
     @Resource
     StatisticsMetaService statisticsMetaService;
@@ -40,8 +44,8 @@ public class ExtendedStatisticsImpl implements ExtendedStatistics {
             switch (pattern){
                 case "count":case "Count": data=this.getCountTemplate(field);break;
                 case "Rate": case "rate" : data=this.getRateTemplate(field);break;
-                case "TimeLine": case "timeLine": case "timeline": data=this.getTimeLineTemplate(field);break;
-                default : throw new BusinessException(BusinessCode.ErrorStatus,"该类型未配置");
+                case "Timeline":case "TimeLine": case "timeLine": case "timeline": data=this.getTimeLineTemplate(field);break;
+                default : logger.info("当前配置类型:{} 配置的域:{}",pattern,field);throw new BusinessException(BusinessCode.ErrorStatus,"该类型未配置");
             }
         }
 
