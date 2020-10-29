@@ -77,11 +77,11 @@ public class StatisticsMetaGroupServiceImpl extends CRUDStatisticsMetaGroupServi
                 JSONObject pJSON = setBody(new JSONObject(), statisticsMetaGroup.getId(),metaTag);
                 pJSON = setHead(pJSON, statisticsMetaGroup);
                 mgTemplate.put(statisticsMetaGroup.getName(), pJSON);
-                TemplateChildren templateChildren = new TemplateChildren(statisticsMetaGroup.getPresenter(), statisticsMetaGroup.getName(),statisticsMetaGroup.getSeq());
+                TemplateChildren templateChildren = new TemplateChildren(statisticsMetaGroup.getPresenter(), statisticsMetaGroup.getName(),statisticsMetaGroup.getSeq(),statisticsMetaGroup.getSpan());
                 templateChildrenList.add(templateChildren);
             } else {
                 //处理子类
-                TemplateChildren templateChildren = new TemplateChildren(statisticsMetaGroup.getPresenter(), statisticsMetaGroup.getField(),statisticsMetaGroup.getSeq());
+                TemplateChildren templateChildren = new TemplateChildren(statisticsMetaGroup.getPresenter(), statisticsMetaGroup.getField(),statisticsMetaGroup.getSeq(),statisticsMetaGroup.getSpan());
                 templateChildrenList.add(templateChildren);
                 putChindrenJSON(mgTemplate, templateChildren, statisticsMetaGroup.getApiReturn(),metaTag);
             }
