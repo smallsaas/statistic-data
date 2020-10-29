@@ -1,12 +1,15 @@
 package com.jfeat.am.module.statistics.api.model;
 
+import com.jfeat.am.module.statistics.services.gen.persistence.model.StatisticsMetaGroup;
+
 public class TemplateChildren {
 
-    public TemplateChildren(String presenter,String field,Integer seq,Integer span){
-        this.presenter = presenter;
-        this.field = field;
-        this.seq = seq;
-        this.span = span;
+    public TemplateChildren(StatisticsMetaGroup statisticsMetaGroup){
+        this.presenter = statisticsMetaGroup.getPresenter();
+        this.field = statisticsMetaGroup.getField();
+        this.seq = statisticsMetaGroup.getSeq();
+        this.span = statisticsMetaGroup.getSpan();
+        this.title = statisticsMetaGroup.getTitle();
     }
     private Integer span;
     private Integer seq;
@@ -14,6 +17,15 @@ public class TemplateChildren {
     private String presenter;
     //域
     private String field;
+    private String title;
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
     public Integer getSpan() {
         return span;
