@@ -8,32 +8,17 @@ public class TemplateChildren {
         this.presenter = statisticsMetaGroup.getPresenter();
         this.field = statisticsMetaGroup.getField();
         this.seq = statisticsMetaGroup.getSeq();
-        this.span = statisticsMetaGroup.getSpan();
-        this.title = statisticsMetaGroup.getTitle();
+
     }
-    private Integer span;
+
     private Integer seq;
     //前端组件名
     private String presenter;
     //域
     private String field;
-    private String title;
 
-    public String getTitle() {
-        return title;
-    }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
 
-    public Integer getSpan() {
-        return span;
-    }
-
-    public void setSpan(Integer span) {
-        this.span = span;
-    }
 
     public Integer getSeq() {
         return seq;
