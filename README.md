@@ -1,4 +1,6 @@
 ## statistic-data
+[![Build Status](https://travis-ci.org/pravega/pravega.svg?branch=master)](https://travis-ci.org/pravega/pravega/builds) [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://www.apache.org/licenses/LICENSE-2.0) 
+
 > 基于springboot的报表快速开发模块
 基于 [ECHART](https://echarts.apache.org/examples/zh/index.html) 图表展示
 
