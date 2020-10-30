@@ -1,12 +1,17 @@
 package com.jfeat.am.module.statistics.api.model;
 
 import com.jfeat.am.module.statistics.services.gen.persistence.model.StatisticsMetaGroup;
+import org.springframework.util.StringUtils;
 
 public class TemplateChildren {
 
     public TemplateChildren(StatisticsMetaGroup statisticsMetaGroup){
         this.presenter = statisticsMetaGroup.getPresenter();
-        this.field = statisticsMetaGroup.getField();
+        if(!StringUtils.isEmpty(statisticsMetaGroup.getField())){
+            this.field = statisticsMetaGroup.getField();
+        }else{
+            this.field = statisticsMetaGroup.getName();
+        }
         this.seq = statisticsMetaGroup.getSeq();
 
     }
