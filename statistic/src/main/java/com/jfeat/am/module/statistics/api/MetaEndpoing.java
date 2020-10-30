@@ -4,6 +4,7 @@ package com.jfeat.am.module.statistics.api;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.jfeat.am.common.annotation.UrlPermission;
 import com.jfeat.am.module.log.annotation.BusinessLog;
 import com.jfeat.am.module.statistics.api.model.MetaGroupTemplate;
 import com.jfeat.am.module.statistics.api.model.MetaTag;
@@ -58,6 +59,7 @@ public class MetaEndpoing {
     }
 
 
+    @UrlPermission
     @ApiOperation("获取分组报表，获得已有配置")
     @GetMapping("/template/{groupName}")
     public Tip getConfigGroupList(@PathVariable String groupName,

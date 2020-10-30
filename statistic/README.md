@@ -121,6 +121,7 @@ CREATE TABLE `st_statistics_meta` (
 - PERCENT="P";//百分比
 - COUNT="C";//数量
 - STRING="S";//字符串
+- AVATAR="A";//头像
 
 对应数据库中的type配置 S,S,S,D,D,D
 
