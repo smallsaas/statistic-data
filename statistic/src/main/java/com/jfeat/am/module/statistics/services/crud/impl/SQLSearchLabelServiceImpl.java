@@ -1,17 +1,48 @@
 package com.jfeat.am.module.statistics.services.crud.impl;
 
+import com.jfeat.am.core.jwt.JWTKit;
 import com.jfeat.am.module.statistics.services.crud.SQLSearchLabelService;
+import com.jfeat.am.module.statistics.services.crud.model.JWTKitParameter;
 import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @Service
 public class SQLSearchLabelServiceImpl implements SQLSearchLabelService {
 
+
+    Map<String,String> getDefaultMap(){
+        Map<String,String> defaultMap = new HashMap<>();
+        defaultMap.put(JWTKitParameter.ORG_ID,JWTKit.getOrgId().toString());
+        defaultMap.put(JWTKitParameter.USER_ID,JWTKit.getUserId().toString());
+        defaultMap.put( JWTKitParameter.B_USER_TYPE,JWTKit.getBUserType());
+        return defaultMap;
+    }
+
+    Map<String, String[]> setRequestDefauleValue(Map<String, String[]> requestMap){
+        //尝试从JWTKIT中获取
+        Map<String, String> defaultMap = getDefaultMap();
+        for (String key:defaultMap.keySet()){
+            String slist[]=new String[1];
+            slist[0]=defaultMap.get(key);
+            if(requestMap.get(key)==null){
+                requestMap.put(key,slist);
+            }
+        }
+        return requestMap;
+
+    }
+
+
     @Override
     public StringBuilder getSQL(Map<String, String[]> requestMap, StringBuilder sql) {
+
+        //设置默认值
+        requestMap = setRequestDefauleValue(requestMap);
+
 
         int ifIndex = sql.indexOf("@if");
         int endIndex = sql.indexOf("@end");
@@ -57,7 +88,7 @@ public class SQLSearchLabelServiceImpl implements SQLSearchLabelService {
                         pro = requestMap.get(pro)[0];
                     }
                   } else {
-                      pro = "";
+                    pro = "";
                   }
                 pro="'"+pro+"'";
                 sql.insert(index, pro);
