@@ -6,13 +6,12 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.jfeat.am.module.statistics.api.model.MetaTag;
 import com.jfeat.am.module.statistics.services.crud.SQLSearchLabelService;
 import com.jfeat.am.module.statistics.services.crud.StatisticsMetaService;
-import com.jfeat.am.module.statistics.services.crud.model.MetaColumns;
+import com.jfeat.am.module.statistics.api.model.MetaColumns;
 import com.jfeat.am.module.statistics.services.gen.crud.service.impl.CRUDStatisticsMetaServiceImpl;
 import com.jfeat.am.module.statistics.services.gen.persistence.dao.StatisticsMetaMapper;
 import com.jfeat.am.module.statistics.services.gen.persistence.model.StatisticsMeta;
 import com.jfeat.crud.base.exception.BusinessCode;
 import com.jfeat.crud.base.exception.BusinessException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -21,8 +20,6 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.sql.DataSource;
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 import java.sql.*;
 import java.util.*;
 
@@ -195,10 +192,19 @@ public class StatisticsMetaServiceImpl extends CRUDStatisticsMetaServiceImpl imp
                for (String name:names) {
                    //数据为空 则返回空
                    if(rs.getObject(name)!=null){
-                       if( metaTag.isEnableType() && "P".equals(nameTypeMap.get(name))){
+                       //单独处理百分比
+                       if( metaTag.isEnableType() && MetaColumns.PERCENT.equals(nameTypeMap.get(name))){
                            pojoObject.put(name,Float.parseFloat(rs.getObject(name).toString())*10000/100);
-                       }else
-                           pojoObject.put(name,rs.getObject(name).toString());
+                       }else if(metaTag.isEnableType() && MetaColumns.JSON_OBJECT.equals(nameTypeMap.get(name))){
+                           //处理jsonObject
+                           JSONObject parse = JSONObject.parseObject(rs.getString(name));
+                           pojoObject.put(name,parse);
+                       }else if(metaTag.isEnableType() && MetaColumns.JSON_ARRAY.equals(nameTypeMap.get(name))){
+                           //处理jsonArray
+                           JSONArray parse = JSONArray.parseArray(rs.getString(name));
+                           pojoObject.put(name,parse);
+                       }else{
+                           pojoObject.put(name,rs.getObject(name).toString());}
                    }else {
                        pojoObject.put(name,null);
                    }
