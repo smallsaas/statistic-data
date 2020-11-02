@@ -45,7 +45,7 @@ public class StatisticsMetaGroupServiceImpl extends CRUDStatisticsMetaGroupServi
 
     public StatisticsMetaGroup getPGroup(String groupName) {
         StatisticsMetaGroup group = smgMapper.selectOne(new QueryWrapper<StatisticsMetaGroup>()
-                .eq("name", groupName).isNull("pid"));
+                .eq("name", groupName));
 
         if (group == null) {
             throw new BusinessException(BusinessCode.CRUD_QUERY_FAILURE, "查询失败,未找到对应配置");
