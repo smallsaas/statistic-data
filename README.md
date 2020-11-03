@@ -26,6 +26,7 @@ GROUP BY t.status
 ```
 
 ### 月度查询例子
+> * 从一月至十二月个字段
 ```sql
 select 	SUM(CASE WHEN MONTH(s.create_time) = 1 THEN 1 ELSE 0 END) as '一月',
 				SUM(CASE WHEN MONTH(s.create_time) = 2 THEN 1 ELSE 0 END) as '二月',
@@ -42,17 +43,72 @@ select 	SUM(CASE WHEN MONTH(s.create_time) = 1 THEN 1 ELSE 0 END) as '一月',
 FROM ca_adverting_plan AS s
 ```
 
+> * 返回12行数据
+```sql
+SELECT mon, total FROM (
+   SELECT
+	CASE 
+	WHEN MONTH(t.createtime)=1 then  '一月'
+	WHEN MONTH(t.createtime)=2 then  '二月'
+	WHEN MONTH(t.createtime)=3 then  '三月'
+	WHEN MONTH(t.createtime)=4 then  '四月'
+	WHEN MONTH(t.createtime)=5 then  '五月'
+	WHEN MONTH(t.createtime)=6 then  '六月'
+	WHEN MONTH(t.createtime)=7 then  '七月'
+	WHEN MONTH(t.createtime)=8 then  '八月'
+	WHEN MONTH(t.createtime)=9 then '九月'
+	WHEN MONTH(t.createtime)=10 then '十月'
+	WHEN MONTH(t.createtime)=11 then '十一月'
+	WHEN MONTH(t.createtime)=12 then  '十二月'
+	END as mon,
+   COUNT(id) as total, MONTH(t.createtime) as seq FROM t_sys_user t GROUP BY mon
+   --
+   -- INCLUDE 0 excluded by GROUP BY
+   --
+   UNION (SELECT '一月' as mon, 0 as total, 1 as seq)
+   UNION (SELECT '二月' as mon, 0 as total, 2 as seq)
+   UNION (SELECT '三月' as mon, 0 as total, 3 as seq)
+   UNION (SELECT '四月' as mon, 0 as total, 4 as seq)
+   UNION (SELECT '五月' as mon, 0 as total, 5 as seq)
+   UNION (SELECT '六月' as mon, 0 as total, 6 as seq)
+   UNION (SELECT '七月' as mon, 0 as total, 7 as seq)
+   UNION (SELECT '八月' as mon, 0 as total, 8 as seq)
+   UNION (SELECT '九月' as mon, 0 as total, 9 as seq)
+   UNION (SELECT '十月' as mon, 0 as total, 10 as seq)
+   UNION (SELECT '十一月' as mon, 0 as total, 11 as seq)
+   UNION (SELECT '十二月' as mon, 0 as total, 12 as seq)
+) t GROUP BY mon ORDER BY seq
+```
+
+
 ```SQL
--- 本月之前（包括本月）之前12月
-SELECT DATE_FORMAT( @cdate := DATE_ADD( @cdate, INTERVAL + 1 MONTH ), '%Y-%m' ) AS month_list 
-FROM ( SELECT @cdate := DATE_ADD( CURRENT_DATE, INTERVAL - 12 MONTH ) FROM `pcd` LIMIT 12 ) t0 
-WHERE DATE( @cdate ) <= DATE_ADD( CURRENT_DATE, INTERVAL - 1 DAY ) 
+-- --本月之前（包括本月）之前12月
+-- SELECT DATE_FORMAT( @cdate := DATE_ADD( @cdate, INTERVAL + 1 MONTH ), '%Y-%m' ) AS month_list 
+-- FROM ( SELECT @cdate := DATE_ADD( CURRENT_DATE, INTERVAL - 12 MONTH ) FROM `pcd` LIMIT 12 ) t0 
+-- WHERE DATE( @cdate ) <= DATE_ADD( CURRENT_DATE, INTERVAL - 1 DAY ) 
+--
+-- USE UNION to remove dependency from `pcd`
+--
+SELECT MONTH( @cdate := DATE_ADD( @cdate, INTERVAL + 1 MONTH )) AS mon
+FROM ( SELECT @cdate := DATE_ADD( concat(YEAR(now()),'-12-31'), INTERVAL - 12 MONTH ) FROM 
+(SELECT 1 as seq
+ UNION (SELECT 2 as seq)
+ UNION (SELECT 3 as seq)
+ UNION (SELECT 4 as seq)
+ UNION (SELECT 5 as seq)
+ UNION (SELECT 6 as seq)
+ UNION (SELECT 7 as seq)
+ UNION (SELECT 8 as seq)
+ UNION (SELECT 9 as seq)
+ UNION (SELECT 10 as seq)
+ UNION (SELECT 11 as seq)
+ UNION (SELECT 12 as seq)) t0) t1
+-- END 
 
 -- 今年1月到12月
 SELECT DATE_FORMAT( @cdate := DATE_ADD( @cdate, INTERVAL + 1 MONTH ), '%Y-%m' ) AS month_list 
 FROM ( SELECT @cdate := DATE_ADD( concat(year(now()),'-12-31'), INTERVAL - 12 MONTH ) FROM `pcd` LIMIT 12 ) t0 
 WHERE DATE( @cdate ) <= DATE_ADD( concat(year(now()),'-12-31'), INTERVAL - 1 DAY ) 
-
 ```
 
 #### 测试方式
