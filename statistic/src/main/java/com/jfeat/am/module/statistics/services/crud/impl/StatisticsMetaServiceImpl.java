@@ -267,7 +267,7 @@ public StringBuilder getSearchSQL(StringBuilder sql,HttpServletRequest request,M
       while (iter.hasNext()) {
         field = iter.next();
         type=nameType.get(field);
-        if(type.equals(MetaColumns.STRING)){
+        if(type.equals(MetaColumns.STRING)||type.equals(MetaColumns.BIG_STRING)){
             fieldRequest=request.getParameter(field);
             if(fieldRequest!=null&&fieldRequest.length()>0){
                 searchSQLByTypeAndField(sql,type,field,fieldRequest);
@@ -319,7 +319,7 @@ public StringBuilder getSearchSQL(StringBuilder sql,HttpServletRequest request,M
 
     //字符串类型 拼接sql
         public StringBuilder  searchSQLByTypeAndField(StringBuilder sql,String type,String field,String fieldRequest){
-           if(type.equals(MetaColumns.STRING)){
+           if(type.equals(MetaColumns.STRING)||type.equals(MetaColumns.BIG_STRING)){
               sql.append(" AND ");
               sql.append(field);
               sql.append(" LIKE ");
