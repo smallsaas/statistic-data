@@ -197,12 +197,23 @@ public class StatisticsMetaServiceImpl extends CRUDStatisticsMetaServiceImpl imp
                            pojoObject.put(name,Float.parseFloat(rs.getObject(name).toString())*10000/100);
                        }else if(metaTag.isEnableType() && MetaColumns.JSON_OBJECT.equals(nameTypeMap.get(name))){
                            //处理jsonObject
-                           JSONObject parse = JSONObject.parseObject(rs.getString(name));
-                           pojoObject.put(name,parse);
+                           String objectString = rs.getString(name);
+                           if(StringUtils.isEmpty(objectString)){
+                               pojoObject.put(name,objectString);
+                           }else{
+                               JSONObject parse = JSONObject.parseObject(objectString);
+                               pojoObject.put(name,parse);
+                           }
                        }else if(metaTag.isEnableType() && MetaColumns.JSON_ARRAY.equals(nameTypeMap.get(name))){
                            //处理jsonArray
-                           JSONArray parse = JSONArray.parseArray(rs.getString(name));
-                           pojoObject.put(name,parse);
+                           String arrayString = rs.getString(name);
+                           if(StringUtils.isEmpty(arrayString)){
+                               pojoObject.put(name,arrayString);
+                           }else{
+                               JSONArray parse = JSONArray.parseArray(arrayString);
+                               pojoObject.put(name,parse);
+                           }
+
                        }else{
                            pojoObject.put(name,rs.getObject(name).toString());}
                    }else {

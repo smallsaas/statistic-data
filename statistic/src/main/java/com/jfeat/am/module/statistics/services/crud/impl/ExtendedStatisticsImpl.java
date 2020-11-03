@@ -54,6 +54,10 @@ public class ExtendedStatisticsImpl implements ExtendedStatistics {
         if(!StringUtils.isEmpty(statisticsMetas.getSpan())){
             data.put("span",statisticsMetas.getSpan());
         }
+        if(!StringUtils.isEmpty(statisticsMetas.getTitle())){
+            data.put("title",statisticsMetas.getTitle());
+        }
+
 
         return data;
     }
@@ -81,15 +85,13 @@ public class ExtendedStatisticsImpl implements ExtendedStatistics {
         StatisticsMeta statisticsMetas = statisticsMetaService.getStatisticsMetas(field);
         pie.put("field",field);
         pie.put("pattern","Rote");
-        pie.put("title",statisticsMetas.getTitle());
+
 
         if(StringUtils.isEmpty(statisticsMetas.getChart())){
             pie.put("chart","Pie");
         }else{
             pie.put("chart",statisticsMetas.getChart());
         }
-
-
         pie.put("name",statisticsMetas.getTitle());
 
         StringBuilder sql = new StringBuilder(statisticsMetas.getQuerySql());
@@ -115,7 +117,6 @@ public class ExtendedStatisticsImpl implements ExtendedStatistics {
         timeLine.put("identifier","");
         timeLine.put("name",statisticsMetas.getTitle());
         timeLine.put("pattern","Rate");
-        timeLine.put("title",statisticsMetas.getTitle());
         timeLine.put("tl","");
 
         StringBuilder sql = new StringBuilder(statisticsMetas.getQuerySql());
