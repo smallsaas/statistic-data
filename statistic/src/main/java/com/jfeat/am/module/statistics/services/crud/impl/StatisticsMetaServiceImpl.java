@@ -130,18 +130,20 @@ public class StatisticsMetaServiceImpl extends CRUDStatisticsMetaServiceImpl imp
            Long total = 0L;
            List<JSONObject> objList=new ArrayList<>();
 
+            Connection connection = null;
+            Statement stmt = null;
+            ResultSet rs = null;
+            ResultSet rese = null;
            try {
-           Connection connection = dataSource.getConnection();
+           connection = dataSource.getConnection();
            List<String> names=new ArrayList<>();//字段名
            Map<String,String> nameTypeMap=new HashMap<>();//名字 类型映射
             //创建 可循环滚动的rs
-            Statement stmt = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
+            stmt = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
             //第一次运行读取字段
-            ResultSet rs = stmt.executeQuery(countSQL);
+            rs = stmt.executeQuery(countSQL);
             ResultSetMetaData resultSetMetaData = rs.getMetaData();
             int colunmCount = resultSetMetaData.getColumnCount();
-
-
 
              if(metaTag.isEnableType()){
                  if(typeArray.length!=colunmCount-1){throw new BusinessException(BusinessCode.CRUD_QUERY_FAILURE,"得到的字段数量和类型数量不匹配 请检查sql和type"); }
@@ -170,7 +172,7 @@ public class StatisticsMetaServiceImpl extends CRUDStatisticsMetaServiceImpl imp
             if(metaTag.isEnablePages()){
                 //重新搜索查找总数
                 countSQL=sql.toString().replaceFirst("(select|SELECT)","SELECT COUNT(*) as total,");
-                ResultSet rese = stmt.executeQuery(countSQL);
+                rese = stmt.executeQuery(countSQL);
                 //指针回到最初位置
                 rese.beforeFirst();
                 while (rese.next()){
@@ -224,9 +226,7 @@ public class StatisticsMetaServiceImpl extends CRUDStatisticsMetaServiceImpl imp
                }
                objList.add(pojoObject);
            }
-           rs.close();
-           stmt.close();
-           connection.close();
+
             //字段名
             if(metaTag.isEnableHead()){
                 data.put("header",names);
@@ -234,6 +234,16 @@ public class StatisticsMetaServiceImpl extends CRUDStatisticsMetaServiceImpl imp
 
            } catch (SQLException e) {
                throw new BusinessException(BusinessCode.CRUD_QUERY_FAILURE, e.getMessage());
+           }
+           finally{
+               try{
+                   if(rs!=null){rs.close();}
+                   if(rese!=null){rese.close();}
+                   if(stmt!=null){stmt.close();}
+                   if(connection!=null){connection.close(); }
+               } catch (Exception e) {
+                   logger.error("数据库连接池关闭异常 {}",e);
+               }
            }
 
            //分页相关
@@ -369,9 +379,12 @@ public StringBuilder getSearchSQL(StringBuilder sql,HttpServletRequest request,M
     public  String getSQLByField(String field,HttpServletRequest request){
         String[] typeArray=null;
         StringBuilder sql=new StringBuilder();
+        Statement stmt = null;
+        ResultSet rs = null;
+        Connection connection = null;
         try {
             String countSQL;//用于查询总记录数
-            Connection connection = dataSource.getConnection();
+            connection = dataSource.getConnection();
             //根据field获取sql
             List<StatisticsMeta> statisticsMetas = statisticsMetaMapper.selectList(new QueryWrapper<StatisticsMeta>().eq(StatisticsMeta.FIELD, field));
             if(statisticsMetas!=null&&statisticsMetas.size()>0){
@@ -383,8 +396,8 @@ public StringBuilder getSearchSQL(StringBuilder sql,HttpServletRequest request,M
                 sql.append(meta.getQuerySql().replaceAll(";",""));
             }else{throw new BusinessException(BusinessCode.CRUD_QUERY_FAILURE,"查找不到field对应的Meta");}
             //创建 可循环滚动的rs
-            Statement stmt = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
-            ResultSet rs = stmt.executeQuery(countSQL);
+            stmt= connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
+            rs = stmt.executeQuery(countSQL);
             ResultSetMetaData resultSetMetaData = rs.getMetaData();
             int colunmCount = resultSetMetaData.getColumnCount();
             List<String> names=new ArrayList<>();//字段名
@@ -403,11 +416,19 @@ public StringBuilder getSearchSQL(StringBuilder sql,HttpServletRequest request,M
             sql=orderSQL(sql,nameTypeMap);
             System.out.println("最终执行的sql:    ");
             System.out.println(sql);
-            rs.close();
-            stmt.close();
-            connection.close();
+
         } catch (SQLException e)
         { e.printStackTrace(); }
+        finally{
+            try {
+                if(rs!=null){rs.close();}
+                if(stmt!=null){stmt.close();}
+                if(connection!=null){connection.close();}
+            } catch (Exception e) {
+                logger.error("数据库连接池关闭异常 {}",e);
+            }
+        }
+
         return sql.toString(); }
 
         //将tips字段解包成数组形式
