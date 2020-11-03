@@ -49,7 +49,7 @@ public class ExtendedStatisticsImpl implements ExtendedStatistics {
             }
         }
         if(!StringUtils.isEmpty(statisticsMetas.getIcon())){
-            data.put("icon",statisticsMetas.getIcon());
+            data.put("icon",analysisIcon(statisticsMetas.getIcon()));
         }
         if(!StringUtils.isEmpty(statisticsMetas.getSpan())){
             data.put("span",statisticsMetas.getSpan());
@@ -125,22 +125,18 @@ public class ExtendedStatisticsImpl implements ExtendedStatistics {
 
     }
 
+    //解析icon
     public JSONArray analysisIcon(String icon){
-        String[] split = icon.split(",");
-
-        return null;
-    }
-
-    //数组转JSONArray
-    public JSONArray arrayToJSONArray(String[] array){
         JSONArray jsonArray=new JSONArray();
-
-        if(array!=null && array.length>0){
-             for (String son:array){
-                 jsonArray.add(son);
-             }
+        String[] split = icon.split(",");
+        for(String s:split){
+            JSONObject jsonObject = new JSONObject();
+            String[] keyValueArray = s.split("-");
+            if(keyValueArray.length!=2){throw new BusinessException(BusinessCode.CRUD_QUERY_FAILURE,"配置异常 配置内容:"+s+"对应格式：字段-[符号]&[符号]");}
+            jsonObject.put(keyValueArray[0],keyValueArray[1]);
+            jsonArray.add(jsonObject);
         }
         return jsonArray;
-
     }
+
 }
