@@ -9,5 +9,7 @@ public class MetaColumns {
     public static final String BIG_STRING="B";//粗体 字符串
 
     public static final String JSON_OBJECT="O";//json object
+
+    public static final String USER_ARRAY="UA";//用户头像
     public static final String JSON_ARRAY="A";//json array
 }

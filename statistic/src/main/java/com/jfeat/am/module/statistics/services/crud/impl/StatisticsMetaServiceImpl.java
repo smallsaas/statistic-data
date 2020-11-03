@@ -204,7 +204,9 @@ public class StatisticsMetaServiceImpl extends CRUDStatisticsMetaServiceImpl imp
                                JSONObject parse = JSONObject.parseObject(objectString);
                                pojoObject.put(name,parse);
                            }
-                       }else if(metaTag.isEnableType() && MetaColumns.JSON_ARRAY.equals(nameTypeMap.get(name))){
+                       }else if(metaTag.isEnableType() &&
+                               (MetaColumns.JSON_ARRAY.equals(nameTypeMap.get(name)) ||MetaColumns.USER_ARRAY.equals(nameTypeMap.get(name)))
+                               ){
                            //处理jsonArray
                            String arrayString = rs.getString(name);
                            if(StringUtils.isEmpty(arrayString)){
