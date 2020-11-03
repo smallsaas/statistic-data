@@ -48,7 +48,12 @@ public class ExtendedStatisticsImpl implements ExtendedStatistics {
                 default : logger.info("当前配置类型:{} 配置的域:{}",pattern,field);throw new BusinessException(BusinessCode.ErrorStatus,"该类型未配置");
             }
         }
-
+        if(!StringUtils.isEmpty(statisticsMetas.getIcon())){
+            data.put("icon",statisticsMetas.getIcon());
+        }
+        if(!StringUtils.isEmpty(statisticsMetas.getSpan())){
+            data.put("span",statisticsMetas.getSpan());
+        }
 
         return data;
     }
@@ -62,9 +67,8 @@ public class ExtendedStatisticsImpl implements ExtendedStatistics {
         JSONObject data=new JSONObject();
         StatisticsMeta statisticsMetas = statisticsMetaService.getStatisticsMetas(field);
         StringBuilder sql = new StringBuilder(statisticsMetas.getQuerySql());
-        if(statisticsMetas.getSpan()!=null){
-            data.put("span",statisticsMetas.getSpan());
-        }
+
+
         data = statisticsMetaService.getTableInfo(data, null, sql, mataTag,"rates");
         return data;
     }
@@ -78,15 +82,14 @@ public class ExtendedStatisticsImpl implements ExtendedStatistics {
         pie.put("field",field);
         pie.put("pattern","Rote");
         pie.put("title",statisticsMetas.getTitle());
+
         if(StringUtils.isEmpty(statisticsMetas.getChart())){
             pie.put("chart","Pie");
         }else{
             pie.put("chart",statisticsMetas.getChart());
         }
 
-        if(statisticsMetas.getSpan()!=null){
-            pie.put("span",statisticsMetas.getSpan());
-        }
+
         pie.put("name",statisticsMetas.getTitle());
 
         StringBuilder sql = new StringBuilder(statisticsMetas.getQuerySql());
@@ -107,11 +110,11 @@ public class ExtendedStatisticsImpl implements ExtendedStatistics {
         }else{
             timeLine.put("chart",statisticsMetas.getChart());
         }
+
         timeLine.put("field",statisticsMetas.getField());
         timeLine.put("identifier","");
         timeLine.put("name",statisticsMetas.getTitle());
         timeLine.put("pattern","Rate");
-        timeLine.put("span",statisticsMetas.getSpan());
         timeLine.put("title",statisticsMetas.getTitle());
         timeLine.put("tl","");
 
@@ -122,5 +125,22 @@ public class ExtendedStatisticsImpl implements ExtendedStatistics {
 
     }
 
+    public JSONArray analysisIcon(String icon){
+        String[] split = icon.split(",");
 
+        return null;
+    }
+
+    //数组转JSONArray
+    public JSONArray arrayToJSONArray(String[] array){
+        JSONArray jsonArray=new JSONArray();
+
+        if(array!=null && array.length>0){
+             for (String son:array){
+                 jsonArray.add(son);
+             }
+        }
+        return jsonArray;
+
+    }
 }
