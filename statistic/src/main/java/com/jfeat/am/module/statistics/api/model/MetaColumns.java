@@ -7,6 +7,6 @@ public class MetaColumns {
     public static final String COUNT="C";//数量
     public static final String STRING="S";//字符串
 
-    public static final String JSON_OBJECT="JO";//json object
-    public static final String JSON_ARRAY="JA";//json array
+    public static final String JSON_OBJECT="O";//json object
+    public static final String JSON_ARRAY="A";//json array
 }
