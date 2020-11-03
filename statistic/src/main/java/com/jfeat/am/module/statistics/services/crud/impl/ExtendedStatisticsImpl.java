@@ -62,6 +62,9 @@ public class ExtendedStatisticsImpl implements ExtendedStatistics {
         JSONObject data=new JSONObject();
         StatisticsMeta statisticsMetas = statisticsMetaService.getStatisticsMetas(field);
         StringBuilder sql = new StringBuilder(statisticsMetas.getQuerySql());
+        if(statisticsMetas.getSpan()!=null){
+            data.put("span",statisticsMetas.getSpan());
+        }
         data = statisticsMetaService.getTableInfo(data, null, sql, mataTag,"rates");
         return data;
     }
