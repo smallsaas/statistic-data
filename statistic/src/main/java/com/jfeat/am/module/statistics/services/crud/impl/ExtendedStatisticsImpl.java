@@ -33,7 +33,7 @@ public class ExtendedStatisticsImpl implements ExtendedStatistics {
         JSONObject data = new JSONObject();
         StatisticsMeta statisticsMetas = statisticsMetaService.getStatisticsMetas(field);
         String pattern = statisticsMetas.getPattern();
-        if(pattern==null){
+        if(StringUtils.isEmpty(pattern)){
             metaTag.setEnableHead(true);
             metaTag.setEnablePages(true);
             metaTag.setEnableSearch(true);
