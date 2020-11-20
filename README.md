@@ -123,4 +123,14 @@ DROP TABLE IF EXISTS t_sink;
 ```
 
 
+#### 导出为Excel文件类型报表
 
+GET `/api/adm/stat/meta/{field}/export/excel`
+
+参数列表：
+
+| **参数** |    **描述**    |
+| :------: | :------------: |
+|  field   | 数据库自动报表域名 |
+
+访问的数据接口API `/api/adm/stat/meta/{field}` ，获取API中的数据作为导出Excel的数据源.

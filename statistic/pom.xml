@@ -29,6 +29,7 @@
         <!---only produce, scope provided-->
         <lombok.version>1.18.4</lombok.version>
         <hutool-core.version>5.1.0</hutool-core.version>
+        <zero-io-core.version>0.0.4</zero-io-core.version>
     </properties>
 
     <dependencies>
@@ -63,6 +64,13 @@
             <artifactId>statement</artifactId>
             <version>1.0.0</version>
         </dependency>-->
+
+        <!-- zero io  -->
+        <dependency>
+            <groupId>com.jfeat</groupId>
+            <artifactId>zero-io-core</artifactId>
+            <version>${zero-io-core.version}</version>
+        </dependency>
 
         <!-- springboot cache -->
         <dependency>
