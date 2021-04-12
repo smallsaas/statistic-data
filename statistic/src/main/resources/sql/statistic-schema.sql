@@ -81,6 +81,7 @@ CREATE TABLE `st_statistics_meta` (
   `search` varchar(255) DEFAULT NULL COMMENT '搜索字段',
   `permission` varchar(50) DEFAULT NULL COMMENT '权限',
   `layout` VARCHAR(26) DEFAULT null COMMENT '布局',
+   `span` int(11) DEFAULT NULL COMMENT '子分组占父分组的列跨度',
   `chart` VARCHAR(50) DEFAULT null COMMENT '组件',
   pattern varchar(30) DEFAULT null,
   `tips` text COMMENT '说明',
