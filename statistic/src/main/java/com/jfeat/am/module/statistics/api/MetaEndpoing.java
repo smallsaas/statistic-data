@@ -1,11 +1,13 @@
 package com.jfeat.am.module.statistics.api;
 
 //import com.jfeat.am.module.log.annotation.BusinessLog;
+
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.jfeat.am.common.annotation.UrlPermission;
 import com.jfeat.am.module.log.annotation.BusinessLog;
+import com.jfeat.am.module.statistics.api.model.MetaColumns;
 import com.jfeat.am.module.statistics.api.model.MetaGroupTemplate;
 import com.jfeat.am.module.statistics.api.model.MetaTag;
 import com.jfeat.am.module.statistics.api.template.TemplateSetting;
@@ -15,10 +17,12 @@ import com.jfeat.am.module.statistics.services.domain.dao.QueryStatisticsMetaDao
 import com.jfeat.am.module.statistics.services.domain.model.StatisticsMetaRecord;
 import com.jfeat.am.module.statistics.services.domain.service.StatisticsMetaGroupService;
 import com.jfeat.am.module.statistics.services.gen.persistence.model.StatisticsMeta;
+import com.jfeat.am.module.statistics.util.MetaUtil;
 import com.jfeat.crud.base.exception.BusinessCode;
 import com.jfeat.crud.base.exception.BusinessException;
 import com.jfeat.crud.base.tips.SuccessTip;
 import com.jfeat.crud.base.tips.Tip;
+import com.jfeat.crud.plus.CRUD;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -30,6 +34,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.List;
 
 @Api("统计 [Statistics] meta")
 @RestController
@@ -48,13 +53,13 @@ public class MetaEndpoing {
     @ApiOperation("根据字段获取报表")
     @GetMapping("/{field}")
     public Tip getConfigList(@PathVariable String field,
-                                  @RequestParam(name = "pageNum", required = false, defaultValue = "1") Long current,
-                                  @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long size
-                                  ) {
+                             @RequestParam(name = "pageNum", required = false, defaultValue = "1") Long current,
+                             @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long size
+    ) {
         MetaTag metaTag = new MetaTag();
         metaTag.setCurrent(current);
         metaTag.setSize(size);
-        JSONObject  data = extendedStatistics.getByPattern(field,metaTag);
+        JSONObject data = extendedStatistics.getByPattern(field, metaTag);
         return SuccessTip.create(data);
     }
 
@@ -65,43 +70,46 @@ public class MetaEndpoing {
     public Tip getConfigGroupList(@PathVariable String groupName,
                                   @RequestParam(name = "pageNum", required = false, defaultValue = "1") Long current,
                                   @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long size) {
-            MetaTag metaTag = new MetaTag();
-            metaTag.setCurrent(current);
-            metaTag.setSize(size);
-            JSONObject template = statisticsMetaGroupService.getTemplateByName(groupName,metaTag);
-            return SuccessTip.create(template);
+        MetaTag metaTag = new MetaTag();
+        metaTag.setCurrent(current);
+        metaTag.setSize(size);
+        JSONObject template = statisticsMetaGroupService.getTemplateByName(groupName, metaTag);
+        return SuccessTip.create(template);
     }
-
-
-
 
 
     @BusinessLog(name = "StatisticsMeta", value = "create StatisticsMeta")
     @PostMapping
-    @ApiOperation(value = "新建 StatisticsMeta",response = StatisticsMeta.class)
-    public Tip createStatisticsMeta(@RequestBody StatisticsMeta entity){
+    @ApiOperation(value = "新建 StatisticsMeta", response = StatisticsMeta.class)
+    public Tip createStatisticsMeta(@RequestBody StatisticsMeta entity) {
 
-        Integer affected=0;
-        try{
-            affected= statisticsMetaService.createMaster(entity);
+        Integer affected = 0;
+        try {
+            //类型进行映射
+            entity.setType(MetaUtil.replaceType(entity.getType()));
+            affected = statisticsMetaService.createMaster(entity);
 
-        }catch(DuplicateKeyException e){
+        } catch (DuplicateKeyException e) {
             throw new BusinessException(BusinessCode.DuplicateKey);
         }
 
         return SuccessTip.create(affected);
     }
+
     @BusinessLog(name = "StatisticsMeta", value = "查看 StatisticsMeta")
     @GetMapping("/getOne/{id}")
-    @ApiOperation(value = "查看 StatisticsMeta",response = StatisticsMeta.class)
-    public Tip getStatisticsMeta(@PathVariable Long id){
-        return SuccessTip.create(statisticsMetaService.retrieveMaster(id));
+    @ApiOperation(value = "查看 StatisticsMeta", response = StatisticsMeta.class)
+    public Tip getStatisticsMeta(@PathVariable Long id) {
+        StatisticsMeta statisticsMeta = statisticsMetaService.retrieveMaster(id);
+//        //类型进行映射
+        statisticsMeta.setType(MetaUtil.transientType(statisticsMeta.getType()));
+        return SuccessTip.create(statisticsMeta);
     }
 
     @BusinessLog(name = "StatisticsMeta", value = "update StatisticsMeta")
     @PutMapping("/{id}")
-    @ApiOperation(value = "修改 StatisticsMeta",response = StatisticsMeta.class)
-    public Tip updateStatisticsMeta(@PathVariable Long id,@RequestBody StatisticsMeta entity){
+    @ApiOperation(value = "修改 StatisticsMeta", response = StatisticsMeta.class)
+    public Tip updateStatisticsMeta(@PathVariable Long id, @RequestBody StatisticsMeta entity) {
         entity.setId(id);
         return SuccessTip.create(statisticsMetaService.updateMaster(entity));
     }
@@ -109,17 +117,17 @@ public class MetaEndpoing {
     @BusinessLog(name = "StatisticsMeta", value = "delete StatisticsMeta")
     @DeleteMapping("/{id}")
     @ApiOperation("删除 StatisticsMeta")
-    public Tip deleteStatisticsMeta(@PathVariable Long id){
+    public Tip deleteStatisticsMeta(@PathVariable Long id) {
         return SuccessTip.create(statisticsMetaService.deleteMaster(id));
     }
 
     @BusinessLog(name = "StatisticsMeta", value = "查询列表 StatisticsMeta")
-    @ApiOperation(value = "StatisticsMeta 列表信息",response = StatisticsMetaRecord.class)
+    @ApiOperation(value = "StatisticsMeta 列表信息", response = StatisticsMetaRecord.class)
     @GetMapping
     @ApiImplicitParams({
-            @ApiImplicitParam(name= "pageNum", dataType = "Integer"),
-            @ApiImplicitParam(name= "pageSize", dataType = "Integer"),
-            @ApiImplicitParam(name= "search", dataType = "String"),
+            @ApiImplicitParam(name = "pageNum", dataType = "Integer"),
+            @ApiImplicitParam(name = "pageSize", dataType = "Integer"),
+            @ApiImplicitParam(name = "search", dataType = "String"),
             @ApiImplicitParam(name = "id", dataType = "Long"),
             @ApiImplicitParam(name = "field", dataType = "String"),
             @ApiImplicitParam(name = "querySql", dataType = "String"),
@@ -128,7 +136,7 @@ public class MetaEndpoing {
             @ApiImplicitParam(name = "title", dataType = "String"),
             @ApiImplicitParam(name = "type", dataType = "String"),
             @ApiImplicitParam(name = "search", dataType = "String"),
-            @ApiImplicitParam(name = "permission", dataType = "String") ,
+            @ApiImplicitParam(name = "permission", dataType = "String"),
             @ApiImplicitParam(name = "orderBy", dataType = "String"),
             @ApiImplicitParam(name = "sort", dataType = "String")
     })
@@ -145,17 +153,17 @@ public class MetaEndpoing {
                                     @RequestParam(name = "type", required = false) String type,
                                     @RequestParam(name = "permission", required = false) String permission,
                                     @RequestParam(name = "orderBy", required = false) String orderBy,
-                                    @RequestParam(name = "sort", required = false)  String sort) {
-        if(orderBy!=null&&orderBy.length()>0){
-            if(sort!=null&&sort.length()>0){
+                                    @RequestParam(name = "sort", required = false) String sort) {
+        if (orderBy != null && orderBy.length() > 0) {
+            if (sort != null && sort.length() > 0) {
                 String pattern = "(ASC|DESC|asc|desc)";
-                if(!sort.matches(pattern)){
+                if (!sort.matches(pattern)) {
                     throw new BusinessException(BusinessCode.BadRequest.getCode(), "sort must be ASC or DESC");//此处异常类型根据实际情况而定
                 }
-            }else{
+            } else {
                 sort = "ASC";
             }
-            orderBy = "`"+orderBy+"`" +" "+sort;
+            orderBy = "`" + orderBy + "`" + " " + sort;
         }
         page.setCurrent(pageNum);
         page.setSize(pageSize);
@@ -169,11 +177,15 @@ public class MetaEndpoing {
         record.setTitle(title);
         record.setType(type);
         record.setPermission(permission);
-        page.setRecords(queryStatisticsMetaDao.findStatisticsMetaPage(page, record, search, orderBy, null, null));
+        List<StatisticsMetaRecord> result = queryStatisticsMetaDao.findStatisticsMetaPage(page, record, search, orderBy, null, null);
+        for (StatisticsMetaRecord resu : result) {
+            //类型进行映射
+            resu.setChinceseType(MetaUtil.transientType(resu.getType()));
+        }
+        page.setRecords(result);
 
         return SuccessTip.create(page);
     }
-
 
 
 }

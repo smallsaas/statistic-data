@@ -1,6 +1,6 @@
-package com.jfeat.am.module.statement.services.legacy.service.impl;
+package com.jfeat.am.module.reportpage.impl;
 import com.jfeat.am.module.statement.services.legacy.dao.TableColumnRatesDao;
-import com.jfeat.am.module.statement.services.legacy.service.TableColumnRatesService;
+import com.jfeat.am.module.reportpage.TableColumnRatesService;
 import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.util.List;

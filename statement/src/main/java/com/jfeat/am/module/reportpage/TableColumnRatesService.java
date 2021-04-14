@@ -1,4 +1,4 @@
-package com.jfeat.am.module.statement.services.legacy.service;
+package com.jfeat.am.module.reportpage;
 
 
 import java.util.Map;
