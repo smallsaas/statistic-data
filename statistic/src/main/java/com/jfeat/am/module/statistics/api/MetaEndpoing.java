@@ -201,6 +201,13 @@ public class MetaEndpoing {
         return SuccessTip.create(statisticsMetaService.getOutputSetting(field, title));
     }
 
+    @BusinessLog(name = "StatisticsMeta", value = "get StatisticsMeta")
+    @GetMapping("/jsonsetting")
+    @ApiOperation("无id时获取 空的jsonsetting")
+    public Tip getJsonSetting() {
+        return SuccessTip.create(null);
+    }
+
     @BusinessLog(name = "StatisticsMeta", value = "查询列表 StatisticsMeta")
     @ApiOperation(value = "StatisticsMeta 列表信息 无分页", response = StatisticsMetaRecord.class)
     @GetMapping("/list")
