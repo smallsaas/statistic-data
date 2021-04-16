@@ -483,8 +483,9 @@ public class StatisticsMetaServiceImpl extends CRUDStatisticsMetaServiceImpl imp
     public JSONObject getOutputSetting(String field,String title) {
         String jsonStringSetting = MetaOutputSetting.JSON_STRING_SETTING;
         JSONObject jsonSetting = JSONObject.parseObject(jsonStringSetting);
-        jsonSetting.put("title", title);
-        JSONArray item = jsonSetting.getJSONArray("items");
+        JSONObject records=jsonSetting.getJSONObject("records");
+        records.put("title", title);
+        JSONArray item = records.getJSONArray("items");
         JSONObject bodyJSON = (JSONObject) item.get(1);
         JSONObject config = bodyJSON.getJSONObject("config");
         JSONObject api = config.getJSONObject("API");
