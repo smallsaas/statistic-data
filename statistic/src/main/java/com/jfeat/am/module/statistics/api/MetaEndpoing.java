@@ -187,5 +187,13 @@ public class MetaEndpoing {
         return SuccessTip.create(page);
     }
 
-
+    @BusinessLog(name = "StatisticsMeta", value = "get StatisticsMeta")
+    @GetMapping("/jsonsetting/{id}")
+    @ApiOperation("获取 jsonsetting")
+    public Tip getJsonSetting(@PathVariable Long id) {
+        StatisticsMeta statisticsMeta = statisticsMetaService.retrieveMaster(id);
+        String field=statisticsMeta.getField();
+        String title=statisticsMeta.getTitle();
+        return SuccessTip.create(statisticsMetaService.getOutputSetting(field,title));
+    }
 }

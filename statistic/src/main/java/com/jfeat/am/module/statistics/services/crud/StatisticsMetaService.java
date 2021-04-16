@@ -10,14 +10,14 @@ import java.util.List;
 
 /**
  * <p>
- *  service interface
+ * service interface
  * </p>
  *
  * @author Code Generator
  * @since 2018-07-29
  * Master: ${cfg.masterModel}
-  * Slave : st_statistics_meta
-  */
+ * Slave : st_statistics_meta
+ */
 public interface StatisticsMetaService extends CRUDStatisticsMetaService {
     String getQuerySql(String field, String recordName, String tuple, String cluster, String timeline);
 
@@ -32,8 +32,11 @@ public interface StatisticsMetaService extends CRUDStatisticsMetaService {
 
 
     //countSQL 用于查询总记录数
-    JSONObject getTableInfo(JSONObject data, String[] typeArray, StringBuilder sql, MetaTag metaTag,String rowsName);
+    JSONObject getTableInfo(JSONObject data, String[] typeArray, StringBuilder sql, MetaTag metaTag, String rowsName);
 
     //根据field和条件 获取sql
-    public  String getSQLByField(String field,HttpServletRequest request);
+    public String getSQLByField(String field, HttpServletRequest request);
+
+    //根据field来动态改变json文件
+    public JSONObject getOutputSetting(String field,String title);
 }
