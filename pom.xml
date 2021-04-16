@@ -17,6 +17,6 @@
     <modules>
         <module>statement</module>
         <module>statistic</module>
-        <module>Report-page</module>
+
     </modules>
 </project>
