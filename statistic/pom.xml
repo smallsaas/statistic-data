@@ -33,11 +33,6 @@
     </properties>
 
     <dependencies>
-        <dependency>
-            <groupId>com.jfeat</groupId>
-            <artifactId>statistic</artifactId>
-            <version>1.0.1</version>
-        </dependency>
         <!-- dev only -->
         <dependency>
             <groupId>com.jfeat</groupId>
