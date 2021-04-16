@@ -4,6 +4,7 @@ package com.jfeat.am.module.statistics.api;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.jfeat.am.common.annotation.UrlPermission;
 import com.jfeat.am.module.log.annotation.BusinessLog;
@@ -16,6 +17,7 @@ import com.jfeat.am.module.statistics.services.crud.StatisticsMetaService;
 import com.jfeat.am.module.statistics.services.domain.dao.QueryStatisticsMetaDao;
 import com.jfeat.am.module.statistics.services.domain.model.StatisticsMetaRecord;
 import com.jfeat.am.module.statistics.services.domain.service.StatisticsMetaGroupService;
+import com.jfeat.am.module.statistics.services.gen.persistence.dao.StatisticsMetaMapper;
 import com.jfeat.am.module.statistics.services.gen.persistence.model.StatisticsMeta;
 import com.jfeat.am.module.statistics.util.MetaUtil;
 import com.jfeat.crud.base.exception.BusinessCode;
@@ -49,6 +51,8 @@ public class MetaEndpoing {
     ExtendedStatistics extendedStatistics;
     @Resource
     StatisticsMetaGroupService statisticsMetaGroupService;
+    @Resource
+    StatisticsMetaMapper statisticsMetaMapper;
 
     @ApiOperation("根据字段获取报表")
     @GetMapping("/{field}")
@@ -192,8 +196,16 @@ public class MetaEndpoing {
     @ApiOperation("获取 jsonsetting")
     public Tip getJsonSetting(@PathVariable Long id) {
         StatisticsMeta statisticsMeta = statisticsMetaService.retrieveMaster(id);
-        String field=statisticsMeta.getField();
-        String title=statisticsMeta.getTitle();
-        return SuccessTip.create(statisticsMetaService.getOutputSetting(field,title));
+        String field = statisticsMeta.getField();
+        String title = statisticsMeta.getTitle();
+        return SuccessTip.create(statisticsMetaService.getOutputSetting(field, title));
+    }
+
+    @BusinessLog(name = "StatisticsMeta", value = "查询列表 StatisticsMeta")
+    @ApiOperation(value = "StatisticsMeta 列表信息 无分页", response = StatisticsMetaRecord.class)
+    @GetMapping("/list")
+    public Tip queryStatisticsMetas() {
+        List<StatisticsMeta> statisticsMetaList = statisticsMetaMapper.selectList(new QueryWrapper<StatisticsMeta>());
+        return SuccessTip.create(statisticsMetaList);
     }
 }
