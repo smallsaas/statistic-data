@@ -21,7 +21,7 @@ public class MetaUtil {
 
     public static String replaceType(String type) {
         String ctype = type.replaceAll("金钱", MetaColumns.DECIMAL)
-                .replaceAll(MetaColumns.TIME, "时间")
+                .replaceAll("时间",MetaColumns.TIME)
                 .replaceAll("百分比", MetaColumns.PERCENT)
                 .replaceAll("数量", MetaColumns.COUNT)
                 .replaceAll("字符串", MetaColumns.STRING)

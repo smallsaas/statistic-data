@@ -114,6 +114,8 @@ public class MetaEndpoing {
     @PutMapping("/{id}")
     @ApiOperation(value = "修改 StatisticsMeta", response = StatisticsMeta.class)
     public Tip updateStatisticsMeta(@PathVariable Long id, @RequestBody StatisticsMeta entity) {
+        //类型进行映射
+        entity.setType(MetaUtil.replaceType(entity.getType()));
         entity.setId(id);
         return SuccessTip.create(statisticsMetaService.updateMaster(entity));
     }

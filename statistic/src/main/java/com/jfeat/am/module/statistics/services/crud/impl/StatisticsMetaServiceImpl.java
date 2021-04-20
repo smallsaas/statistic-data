@@ -479,11 +479,11 @@ public class StatisticsMetaServiceImpl extends CRUDStatisticsMetaServiceImpl imp
         return endtipArray;
     }
 
-
-    public JSONObject getOutputSetting(String field,String title) {
+    //处理json文件，动态生成报表页面
+    public JSONObject getOutputSetting(String field, String title) {
         String jsonStringSetting = MetaOutputSetting.JSON_STRING_SETTING;
         JSONObject jsonSetting = JSONObject.parseObject(jsonStringSetting);
-        JSONObject records=jsonSetting.getJSONObject("records");
+        JSONObject records = jsonSetting.getJSONObject("records");
         records.put("title", title);
         JSONArray item = records.getJSONArray("items");
         JSONObject bodyJSON = (JSONObject) item.get(1);
@@ -496,10 +496,10 @@ public class StatisticsMetaServiceImpl extends CRUDStatisticsMetaServiceImpl imp
         JSONArray actions = config.getJSONArray("actions");
         JSONObject actions_0 = (JSONObject) actions.get(0);
         JSONObject options = actions_0.getJSONObject("options");
-        StringBuffer apiBuffer=new StringBuffer();
-        apiBuffer.append("/api/io/excel/export/");
+        StringBuffer apiBuffer = new StringBuffer();
+        apiBuffer.append("/api/io/export/");
         apiBuffer.append(field);
-        options.put("API",apiBuffer.toString());
+        options.put("API", apiBuffer.toString());
         return jsonSetting;
     }
 
