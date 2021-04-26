@@ -91,6 +91,7 @@ CREATE TABLE `st_statistics_meta` (
 -- ----------------------------
 -- 自动报表分组表
 -- ----------------------------
+DROP TABLE IF EXISTS `st_statistics_meta_group`;
 CREATE TABLE `st_statistics_meta_group` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `name` varchar(60) DEFAULT NULL COMMENT '分组标识',
