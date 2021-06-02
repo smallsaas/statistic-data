@@ -79,6 +79,26 @@ public class StatisticsMeta extends Model<StatisticsMeta> {
 	private String chart;
 
 	private String pattern;
+	
+	private Long menuId;
+
+	private Long permId;
+
+	public Long getPermId() {
+		return permId;
+	}
+
+	public void setPermId(Long permId) {
+		this.permId = permId;
+	}
+
+	public Long getMenuId() {
+		return menuId;
+	}
+
+	public void setMenuId(Long menuId) {
+		this.menuId = menuId;
+	}
 
 	public String getPattern() {
 		return pattern;

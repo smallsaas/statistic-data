@@ -19,6 +19,7 @@ import com.jfeat.am.module.statistics.services.domain.model.StatisticsMetaRecord
 import com.jfeat.am.module.statistics.services.domain.service.StatisticsMetaGroupService;
 import com.jfeat.am.module.statistics.services.gen.persistence.dao.StatisticsMetaMapper;
 import com.jfeat.am.module.statistics.services.gen.persistence.model.StatisticsMeta;
+import com.jfeat.am.module.statistics.util.GenCodeUtil;
 import com.jfeat.am.module.statistics.util.MetaUtil;
 import com.jfeat.crud.base.exception.BusinessCode;
 import com.jfeat.crud.base.exception.BusinessException;
@@ -91,7 +92,13 @@ public class MetaEndpoing {
         try {
             //类型进行映射
             entity.setType(MetaUtil.replaceType(entity.getType()));
-            affected = statisticsMetaService.createMaster(entity);
+
+            if(entity.getMenuId()!=null){
+                affected = statisticsMetaService.createStatisticAndMenu(entity);
+            }
+            else{
+                affected = statisticsMetaService.createMaster(entity);
+            }
 
         } catch (DuplicateKeyException e) {
             throw new BusinessException(BusinessCode.DuplicateKey);

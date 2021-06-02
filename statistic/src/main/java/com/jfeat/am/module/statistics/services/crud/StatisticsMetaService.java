@@ -1,9 +1,11 @@
 package com.jfeat.am.module.statistics.services.crud;
 
 import com.alibaba.fastjson.JSONObject;
+import com.itextpdf.text.Meta;
 import com.jfeat.am.module.statistics.api.model.MetaTag;
 import com.jfeat.am.module.statistics.services.gen.crud.service.CRUDStatisticsMetaService;
 import com.jfeat.am.module.statistics.services.gen.persistence.model.StatisticsMeta;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -19,6 +21,11 @@ import java.util.List;
  * Slave : st_statistics_meta
  */
 public interface StatisticsMetaService extends CRUDStatisticsMetaService {
+
+
+    @Transactional
+    Integer createStatisticAndMenu(StatisticsMeta meta);
+
     String getQuerySql(String field, String recordName, String tuple, String cluster, String timeline);
 
     //根据field获取 json化的 表

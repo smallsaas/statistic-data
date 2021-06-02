@@ -3,6 +3,13 @@ package com.jfeat.am.module.statistics.services.crud.impl;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.itextpdf.text.Meta;
+import com.jfeat.am.core.jwt.JWTKit;
+import com.jfeat.am.module.menu.services.domain.model.MenuType;
+import com.jfeat.am.module.menu.services.domain.service.MenuService;
+import com.jfeat.am.module.menu.services.gen.persistence.model.Menu;
+import com.jfeat.am.module.menu.util.MenuUtil;
+import com.jfeat.am.module.statistics.api.IoEndpoint;
 import com.jfeat.am.module.statistics.api.model.MetaOutputSetting;
 import com.jfeat.am.module.statistics.api.model.MetaTag;
 import com.jfeat.am.module.statistics.services.crud.SQLSearchLabelService;
@@ -13,7 +20,11 @@ import com.jfeat.am.module.statistics.services.gen.persistence.dao.StatisticsMet
 import com.jfeat.am.module.statistics.services.gen.persistence.model.StatisticsMeta;
 import com.jfeat.crud.base.exception.BusinessCode;
 import com.jfeat.crud.base.exception.BusinessException;
+import com.jfeat.crud.plus.CRUDFilter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -23,6 +34,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.sql.DataSource;
 import java.sql.*;
 import java.util.*;
+import java.util.Date;
+
+import static com.jfeat.am.module.statistics.api.perm.StatisticsMetaPermission.DEFAULT_REPORT_PERM_ID;
+import static com.jfeat.am.module.statistics.api.perm.StatisticsMetaPermission.DEFAULT_REPORT_VIEW;
 
 /**
  * <p>
@@ -44,6 +59,38 @@ public class StatisticsMetaServiceImpl extends CRUDStatisticsMetaServiceImpl imp
 
     @Resource
     SQLSearchLabelService sqlSearchLabelService;
+
+    @Resource
+    MenuService menuService;
+
+
+    protected final static Logger logger = LoggerFactory.getLogger(StatisticsMetaServiceImpl.class);
+
+
+    @Override
+    @Transactional
+    public Integer createStatisticAndMenu(StatisticsMeta meta){
+        Integer res = 0;
+        /***      创建菜单          **/
+        Menu menu = MenuUtil.getInitMenu();
+        menu.setPid(meta.getMenuId());
+        menu.setMenuName(meta.getTitle());
+        menu.setOrgId(JWTKit.getTenantOrgId());
+        menu.setMenuType(MenuType.MENU);
+        menu.setPermId(DEFAULT_REPORT_PERM_ID);
+        menu.setPerm(DEFAULT_REPORT_VIEW);
+        res += menuService.createMaster(menu,null);
+        logger.info("menuId,{}",menu.getId());
+
+        if(res == 0){
+            throw new BusinessException(BusinessCode.CRUD_GENERAL_ERROR,"菜单生成失败");
+        }
+
+        /***      创建报表          **/
+        meta.setMenuId(menu.getId());
+        res += createMaster(meta);
+         return res;
+    }
 
 
     @Override

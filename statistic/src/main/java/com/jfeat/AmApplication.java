@@ -19,13 +19,9 @@ import java.sql.SQLException;
  */
 @SpringBootApplication
 @EnableScheduling
-public class AmApplication implements CommandLineRunner {
+public class AmApplication{
 
     protected final static Logger logger = LoggerFactory.getLogger(AmApplication.class);
-
-    @Override
-    public void run(String... strings) throws Exception {
-    }
 
     public static void main(String[] args) throws SQLException {
         SpringApplication.run(AmApplication.class, args);

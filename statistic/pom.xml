@@ -45,6 +45,12 @@
             <artifactId>crud-plus</artifactId>
             <version>${crud-plus.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.jfeat</groupId>
+            <artifactId>menu</artifactId>
+            <version>1.0.0</version>
+        </dependency>
         <!--<dependency>
             <groupId>com.jfeat</groupId>
             <artifactId>uaas</artifactId>

@@ -85,6 +85,8 @@ CREATE TABLE `st_statistics_meta` (
   `chart` VARCHAR(50) DEFAULT null COMMENT '组件',
   pattern varchar(30) DEFAULT null,
   `tips` text COMMENT '说明',
+  `menu_id` bigint(20) DEFAULT null COMMENT '关联菜单id',
+  `perm_id` bigint(20) DEFAULT null COMMENT '关联权限id',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

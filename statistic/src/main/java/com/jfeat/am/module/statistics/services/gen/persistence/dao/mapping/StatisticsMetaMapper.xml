@@ -18,11 +18,14 @@
 		<result column="span" property="span"/>
 		<result column="chart" property="chart"/>
 		<result column="pattern" property="pattern"/>
+		<result column="menu_id" property="menuId"/>
+		<result column="perm_id" property="permId"/>
 	</resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, field, query_sql AS querySql, percent, icon, title, type, search, permission,tips,layout,span,chart,pattern
+        id, field, query_sql AS querySql, percent, icon, title, type, search,
+         permission,tips,layout,span,chart,pattern
     </sql>
 
 </mapper>
