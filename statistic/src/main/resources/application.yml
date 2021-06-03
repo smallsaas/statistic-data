@@ -68,6 +68,9 @@ mybatis-plus:
     multipleResultSetsEnabled: true #开启的话，延时加载一个属性时会加载该对象全部属性，否则按需加载属性
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl #打印sql语句,调试用
 
+genWeb:
+  webProject: webProjectTest
+
 ---
 
 ##########################################################
@@ -98,7 +101,8 @@ am:
 spring:
   profiles: dev
   datasource:
-      url: jdbc:mysql://192.168.3.239:3306/eav?autoReconnect=true&useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull
+#      url: jdbc:mysql://192.168.3.239:3306/eav?autoReconnect=true&useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull
+      url: jdbc:mysql://cn1.utools.club:32816/eav?autoReconnect=true&useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull
       username: root
       password: root
       initialize: false

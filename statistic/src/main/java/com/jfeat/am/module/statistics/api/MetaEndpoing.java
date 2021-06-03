@@ -2,16 +2,14 @@ package com.jfeat.am.module.statistics.api;
 
 //import com.jfeat.am.module.log.annotation.BusinessLog;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.jfeat.am.common.annotation.UrlPermission;
 import com.jfeat.am.module.log.annotation.BusinessLog;
-import com.jfeat.am.module.statistics.api.model.MetaColumns;
-import com.jfeat.am.module.statistics.api.model.MetaGroupTemplate;
+import com.jfeat.am.module.menu.services.gen.persistence.dao.MenuMapper;
+import com.jfeat.am.module.statistics.api.model.GenWebSetting;
 import com.jfeat.am.module.statistics.api.model.MetaTag;
-import com.jfeat.am.module.statistics.api.template.TemplateSetting;
 import com.jfeat.am.module.statistics.services.crud.ExtendedStatistics;
 import com.jfeat.am.module.statistics.services.crud.StatisticsMetaService;
 import com.jfeat.am.module.statistics.services.domain.dao.QueryStatisticsMetaDao;
@@ -25,7 +23,6 @@ import com.jfeat.crud.base.exception.BusinessCode;
 import com.jfeat.crud.base.exception.BusinessException;
 import com.jfeat.crud.base.tips.SuccessTip;
 import com.jfeat.crud.base.tips.Tip;
-import com.jfeat.crud.plus.CRUD;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -34,10 +31,10 @@ import org.springframework.dao.DuplicateKeyException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+import java.io.File;
 import java.util.List;
+
+import static com.jfeat.am.module.statistics.util.GenCodeUtil.DEFAULT_WEB_PAGE;
 
 @Api("统计 [Statistics] meta")
 @RestController
@@ -54,6 +51,10 @@ public class MetaEndpoing {
     StatisticsMetaGroupService statisticsMetaGroupService;
     @Resource
     StatisticsMetaMapper statisticsMetaMapper;
+    @Resource
+    GenWebSetting genWebSetting;
+    @Resource
+    MenuMapper menuMapper;
 
     @ApiOperation("根据字段获取报表")
     @GetMapping("/{field}")
@@ -131,6 +132,10 @@ public class MetaEndpoing {
     @DeleteMapping("/{id}")
     @ApiOperation("删除 StatisticsMeta")
     public Tip deleteStatisticsMeta(@PathVariable Long id) {
+        StatisticsMeta statisticsMeta = statisticsMetaService.retrieveMaster(id);
+        if(statisticsMeta!=null && statisticsMeta.getMenuId()!=null){
+            menuMapper.deleteById(statisticsMeta.getMenuId());
+        }
         return SuccessTip.create(statisticsMetaService.deleteMaster(id));
     }
 
@@ -223,5 +228,14 @@ public class MetaEndpoing {
     public Tip queryStatisticsMetas() {
         List<StatisticsMeta> statisticsMetaList = statisticsMetaMapper.selectList(new QueryWrapper<StatisticsMeta>());
         return SuccessTip.create(statisticsMetaList);
+    }
+
+    @PostMapping("/genTest")
+    public Tip genTest(@RequestBody StatisticsMeta statisticsMeta){
+        String url = GenCodeUtil.genUrl(genWebSetting.getWebProject(), statisticsMeta.getField());
+        GenCodeUtil.genCode(url,statisticsMeta.getField()+"Index.js",GenCodeUtil.genIndexTemplate(statisticsMeta).toString());
+        GenCodeUtil.genCode(url,statisticsMeta.getField()+".js",GenCodeUtil.genStringByMeta(statisticsMeta).toString());
+
+        return null;
     }
 }

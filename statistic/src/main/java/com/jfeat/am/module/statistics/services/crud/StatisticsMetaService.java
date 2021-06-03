@@ -26,6 +26,8 @@ public interface StatisticsMetaService extends CRUDStatisticsMetaService {
     @Transactional
     Integer createStatisticAndMenu(StatisticsMeta meta);
 
+    String genWebCode(StatisticsMeta meta);
+
     String getQuerySql(String field, String recordName, String tuple, String cluster, String timeline);
 
     //根据field获取 json化的 表

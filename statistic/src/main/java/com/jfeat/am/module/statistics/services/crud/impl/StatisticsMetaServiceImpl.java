@@ -10,6 +10,7 @@ import com.jfeat.am.module.menu.services.domain.service.MenuService;
 import com.jfeat.am.module.menu.services.gen.persistence.model.Menu;
 import com.jfeat.am.module.menu.util.MenuUtil;
 import com.jfeat.am.module.statistics.api.IoEndpoint;
+import com.jfeat.am.module.statistics.api.model.GenWebSetting;
 import com.jfeat.am.module.statistics.api.model.MetaOutputSetting;
 import com.jfeat.am.module.statistics.api.model.MetaTag;
 import com.jfeat.am.module.statistics.services.crud.SQLSearchLabelService;
@@ -18,6 +19,7 @@ import com.jfeat.am.module.statistics.api.model.MetaColumns;
 import com.jfeat.am.module.statistics.services.gen.crud.service.impl.CRUDStatisticsMetaServiceImpl;
 import com.jfeat.am.module.statistics.services.gen.persistence.dao.StatisticsMetaMapper;
 import com.jfeat.am.module.statistics.services.gen.persistence.model.StatisticsMeta;
+import com.jfeat.am.module.statistics.util.GenCodeUtil;
 import com.jfeat.crud.base.exception.BusinessCode;
 import com.jfeat.crud.base.exception.BusinessException;
 import com.jfeat.crud.plus.CRUDFilter;
@@ -32,6 +34,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.sql.DataSource;
+import java.io.File;
 import java.sql.*;
 import java.util.*;
 import java.util.Date;
@@ -62,6 +65,8 @@ public class StatisticsMetaServiceImpl extends CRUDStatisticsMetaServiceImpl imp
 
     @Resource
     MenuService menuService;
+    @Resource
+    GenWebSetting genWebSetting;
 
 
     protected final static Logger logger = LoggerFactory.getLogger(StatisticsMetaServiceImpl.class);
@@ -71,6 +76,8 @@ public class StatisticsMetaServiceImpl extends CRUDStatisticsMetaServiceImpl imp
     @Transactional
     public Integer createStatisticAndMenu(StatisticsMeta meta){
         Integer res = 0;
+        /***      生成前端代码          **/
+        String webIndex = genWebCode(meta);
         /***      创建菜单          **/
         Menu menu = MenuUtil.getInitMenu();
         menu.setPid(meta.getMenuId());
@@ -79,6 +86,7 @@ public class StatisticsMetaServiceImpl extends CRUDStatisticsMetaServiceImpl imp
         menu.setMenuType(MenuType.MENU);
         menu.setPermId(DEFAULT_REPORT_PERM_ID);
         menu.setPerm(DEFAULT_REPORT_VIEW);
+        menu.setComponent(webIndex);
         res += menuService.createMaster(menu,null);
         logger.info("menuId,{}",menu.getId());
 
@@ -89,7 +97,19 @@ public class StatisticsMetaServiceImpl extends CRUDStatisticsMetaServiceImpl imp
         /***      创建报表          **/
         meta.setMenuId(menu.getId());
         res += createMaster(meta);
-         return res;
+
+
+
+        return res;
+    }
+
+    @Override
+    public String genWebCode(StatisticsMeta meta){
+        String url = GenCodeUtil.genUrl(genWebSetting.getWebProject(), meta.getField());
+        String indexFileName = meta.getField()+"Index.js";
+        GenCodeUtil.genCode(url,indexFileName,GenCodeUtil.genIndexTemplate(meta).toString());
+        GenCodeUtil.genCode(url,meta.getField()+".js",GenCodeUtil.genStringByMeta(meta).toString());
+        return File.separator + meta.getField()+ File.separator + indexFileName;
     }
 
 
