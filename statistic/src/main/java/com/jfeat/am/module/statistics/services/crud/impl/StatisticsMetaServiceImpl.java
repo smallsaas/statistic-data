@@ -81,7 +81,8 @@ public class StatisticsMetaServiceImpl extends CRUDStatisticsMetaServiceImpl imp
         /***      获取父类菜单路径          **/
 
         Menu pMenu = menuService.retrieveMaster(meta.getMenuId());
-        String webIndex = pMenu.getComponent()+ File.separator + meta.getField();
+        //   /父菜单/table?table=field
+        String webIndex = pMenu.getComponent()+ File.separator+"table?table=" + meta.getField();
         /***      创建菜单          **/
         Menu menu = MenuUtil.getInitMenu();
         menu.setPid(meta.getMenuId());
