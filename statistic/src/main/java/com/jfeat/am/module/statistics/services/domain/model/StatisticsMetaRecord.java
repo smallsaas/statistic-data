@@ -6,7 +6,29 @@ import com.jfeat.am.module.statistics.services.gen.persistence.model.StatisticsM
  * Created by Code Generator on 2020-04-17
  */
 public class StatisticsMetaRecord extends StatisticsMeta{
+
+    private String menuName;
+
+    private String groupMenuName;
+
+
     private String chinceseType;
+
+    public String getGroupMenuName() {
+        return groupMenuName;
+    }
+
+    public void setGroupMenuName(String groupMenuName) {
+        this.groupMenuName = groupMenuName;
+    }
+
+    public String getMenuName() {
+        return menuName;
+    }
+
+    public void setMenuName(String menuName) {
+        this.menuName = menuName;
+    }
 
     public String getChinceseType() {
         return chinceseType;

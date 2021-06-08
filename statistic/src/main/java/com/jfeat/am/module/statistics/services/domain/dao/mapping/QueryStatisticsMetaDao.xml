@@ -12,8 +12,10 @@
 
 
     <select id="findStatisticsMetaPage" resultType="StatisticsMetaRecord" parameterType="StatisticsMetaRecord">
-        SELECT st_statistics_meta.*
+        SELECT st_statistics_meta.*,sys_menu.menu_name as menuName,f.menu_name as groupMenuName
         FROM st_statistics_meta
+        left join sys_menu on sys_menu.id = st_statistics_meta.menu_id
+        left join sys_menu f on f.id = sys_menu.pid
         WHERE 1=1
         <if test="record.id != null and record.id>0 ">
             AND st_statistics_meta.id LIKE CONCAT('%',#{record.id},'%')

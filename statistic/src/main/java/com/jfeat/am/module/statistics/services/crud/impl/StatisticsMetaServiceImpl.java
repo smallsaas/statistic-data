@@ -76,8 +76,12 @@ public class StatisticsMetaServiceImpl extends CRUDStatisticsMetaServiceImpl imp
     @Transactional
     public Integer createStatisticAndMenu(StatisticsMeta meta){
         Integer res = 0;
-        /***      生成前端代码          **/
-        String webIndex = genWebCode(meta);
+        /***      生成前端代码   取消       **/
+        //String webIndex = genWebCode(meta);
+        /***      获取父类菜单路径          **/
+
+        Menu pMenu = menuService.retrieveMaster(meta.getMenuId());
+        String webIndex = pMenu.getComponent()+ File.separator + meta.getField();
         /***      创建菜单          **/
         Menu menu = MenuUtil.getInitMenu();
         menu.setPid(meta.getMenuId());
