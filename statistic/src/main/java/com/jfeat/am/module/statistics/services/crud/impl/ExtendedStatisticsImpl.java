@@ -28,10 +28,24 @@ public class ExtendedStatisticsImpl implements ExtendedStatistics {
     @Resource
     StatisticsMetaService statisticsMetaService;
 
+    //根据id获取表单信息
     @Override
-    public JSONObject getByPattern(String field,MetaTag metaTag){
-        JSONObject data = new JSONObject();
+    public JSONObject getJSONById(Long id, MetaTag metaTag){
+        StatisticsMeta statisticsMetas = statisticsMetaService.getStatisticsMetaById(id);
+        return getByPattern(statisticsMetas,metaTag);
+    }
+
+    //根据Field获取表单信息
+    @Override
+    public JSONObject getJSONByField(String field, MetaTag metaTag){
         StatisticsMeta statisticsMetas = statisticsMetaService.getStatisticsMetas(field);
+        return getByPattern(statisticsMetas,metaTag);
+    }
+
+    @Override
+    public JSONObject getByPattern(StatisticsMeta statisticsMetas,MetaTag metaTag){
+        JSONObject data = new JSONObject();
+        String field = statisticsMetas.getField();
         String pattern = statisticsMetas.getPattern();
         if(StringUtils.isEmpty(pattern)){
             metaTag.setEnableHead(true);

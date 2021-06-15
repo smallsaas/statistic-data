@@ -65,23 +65,11 @@ public class MetaEndpoing {
         MetaTag metaTag = new MetaTag();
         metaTag.setCurrent(current);
         metaTag.setSize(size);
-        JSONObject data = extendedStatistics.getByPattern(field, metaTag);
+        JSONObject data = extendedStatistics.getJSONByField(field, metaTag);
         return SuccessTip.create(data);
     }
 
-    @ApiOperation("根据字段获取报表")
-    @GetMapping("/table")
-    public Tip getConfigListByParam(@RequestParam(name = "table", required = false, defaultValue = "1")  String table,
 
-                             @RequestParam(name = "pageNum", required = false, defaultValue = "1") Long current,
-                             @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long size
-    ) {
-        MetaTag metaTag = new MetaTag();
-        metaTag.setCurrent(current);
-        metaTag.setSize(size);
-        JSONObject data = extendedStatistics.getByPattern(table, metaTag);
-        return SuccessTip.create(data);
-    }
 
 
     @UrlPermission

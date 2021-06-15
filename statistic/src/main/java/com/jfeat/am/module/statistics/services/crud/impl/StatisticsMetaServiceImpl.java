@@ -71,6 +71,10 @@ public class StatisticsMetaServiceImpl extends CRUDStatisticsMetaServiceImpl imp
 
     protected final static Logger logger = LoggerFactory.getLogger(StatisticsMetaServiceImpl.class);
 
+    @Override
+    public StatisticsMeta getStatisticsMetaById(Long id){
+        return statisticsMetaMapper.selectById(id);
+    }
 
     @Override
     @Transactional

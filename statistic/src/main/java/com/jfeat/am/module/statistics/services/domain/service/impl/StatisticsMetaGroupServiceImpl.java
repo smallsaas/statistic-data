@@ -108,7 +108,7 @@ public class StatisticsMetaGroupServiceImpl extends CRUDStatisticsMetaGroupServi
 
         JSONObject chJson = new JSONObject();
         if (ApiReturn.API_JSON.equals(apiReturn.trim())) {
-            chJson = extendedStatistics.getByPattern(children.getField(),metaTag);
+            chJson = extendedStatistics.getJSONByField(children.getField(),metaTag);
 
         } else {
             StringBuilder sb = new StringBuilder(META_API_URL);

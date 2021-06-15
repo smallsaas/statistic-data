@@ -23,6 +23,8 @@ import java.util.List;
 public interface StatisticsMetaService extends CRUDStatisticsMetaService {
 
 
+    StatisticsMeta getStatisticsMetaById(Long id);
+
     @Transactional
     Integer createStatisticAndMenu(StatisticsMeta meta);
 
