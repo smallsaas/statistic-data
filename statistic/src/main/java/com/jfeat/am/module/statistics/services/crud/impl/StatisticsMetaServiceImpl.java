@@ -86,7 +86,7 @@ public class StatisticsMetaServiceImpl extends CRUDStatisticsMetaServiceImpl imp
 
         Menu pMenu = menuService.retrieveMaster(meta.getMenuId());
         //   /父菜单/table?table=field
-        String webIndex = pMenu.getComponent()+ File.separator+"table?table=" + meta.getField();
+
         /***      创建菜单          **/
         Menu menu = MenuUtil.getInitMenu();
         menu.setPid(meta.getMenuId());
@@ -95,7 +95,7 @@ public class StatisticsMetaServiceImpl extends CRUDStatisticsMetaServiceImpl imp
         menu.setMenuType(MenuType.MENU);
         menu.setPermId(DEFAULT_REPORT_PERM_ID);
         menu.setPerm(DEFAULT_REPORT_VIEW);
-        menu.setComponent(webIndex);
+        //menu.setComponent(webIndex);
         res += menuService.createMaster(menu,null);
         logger.info("menuId,{}",menu.getId());
 
@@ -107,7 +107,10 @@ public class StatisticsMetaServiceImpl extends CRUDStatisticsMetaServiceImpl imp
         meta.setMenuId(menu.getId());
         res += createMaster(meta);
 
-
+        /***      获取报表的id 重新更新菜单路由          **/
+        String webIndex = pMenu.getComponent()+ File.separator+"table?id="+meta.getId();
+        menu.setComponent(webIndex);
+        menuService.updateMaster(menu,false);
 
         return res;
     }
