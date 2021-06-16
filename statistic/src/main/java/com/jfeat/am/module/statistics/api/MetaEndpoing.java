@@ -132,8 +132,10 @@ public class MetaEndpoing {
             //菜单组id不为空 更新对应菜单
             if(entity.getMenuId()==null){throw new BusinessException(4001,"此报表没菜单");}
             Menu menu = menuMapper.selectById(entity.getMenuId());
+            Menu pMenu = menuMapper.selectById(entity.getGroupMenuId());
             if(menu==null){throw new BusinessException(4001,"报表对应的菜单不存在");}
             menu.setPid(entity.getGroupMenuId());
+            menu.setComponent(pMenu.getComponent()+"/table?id="+id);
             menuMapper.updateById(menu);
         }
         return SuccessTip.create(statisticsMetaService.updateMaster(entity));
