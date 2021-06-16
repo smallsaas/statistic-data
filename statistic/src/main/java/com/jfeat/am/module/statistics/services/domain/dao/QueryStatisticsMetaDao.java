@@ -17,4 +17,6 @@ public interface QueryStatisticsMetaDao extends BaseMapper<StatisticsMeta> {
     List<StatisticsMetaRecord> findStatisticsMetaPage(Page<StatisticsMetaRecord> page, @Param("record") StatisticsMetaRecord record,
                                                       @Param("search") String search, @Param("orderBy") String orderBy,
                                                       @Param("startTime") Date startTime, @Param("endTime") Date endTime);
+
+    StatisticsMetaRecord selectOne(Long id);
 }

@@ -3,6 +3,7 @@ package com.jfeat.am.module.statistics.services.crud;
 import com.alibaba.fastjson.JSONObject;
 import com.itextpdf.text.Meta;
 import com.jfeat.am.module.statistics.api.model.MetaTag;
+import com.jfeat.am.module.statistics.services.domain.model.StatisticsMetaRecord;
 import com.jfeat.am.module.statistics.services.gen.crud.service.CRUDStatisticsMetaService;
 import com.jfeat.am.module.statistics.services.gen.persistence.model.StatisticsMeta;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,7 +27,7 @@ public interface StatisticsMetaService extends CRUDStatisticsMetaService {
     StatisticsMeta getStatisticsMetaById(Long id);
 
     @Transactional
-    Integer createStatisticAndMenu(StatisticsMeta meta);
+    Integer createStatisticAndMenu(StatisticsMetaRecord meta);
 
     String genWebCode(StatisticsMeta meta);
 

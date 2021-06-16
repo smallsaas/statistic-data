@@ -10,6 +10,14 @@
             t_sys_org.right_num >= children.left_num and t_sys_org.id=#{ownerOrgId} order by t_sys_org.node_level ASC
         </sql>
 
+    <select id="selectOne" resultType="StatisticsMetaRecord">
+        SELECT st_statistics_meta.*,sys_menu.menu_name as menuName,f.menu_name as groupMenuName,f.id as groupMenuId
+        FROM st_statistics_meta
+        left join sys_menu on sys_menu.id = st_statistics_meta.menu_id
+        left join sys_menu f on f.id = sys_menu.pid
+        where st_statistics_meta.id = #{id}
+    </select>
+
 
     <select id="findStatisticsMetaPage" resultType="StatisticsMetaRecord" parameterType="StatisticsMetaRecord">
         SELECT st_statistics_meta.*,sys_menu.menu_name as menuName,f.menu_name as groupMenuName

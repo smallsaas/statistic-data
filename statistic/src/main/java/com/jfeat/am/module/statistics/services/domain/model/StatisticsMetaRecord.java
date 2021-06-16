@@ -11,8 +11,18 @@ public class StatisticsMetaRecord extends StatisticsMeta{
 
     private String groupMenuName;
 
+    private Long groupMenuId;
+
 
     private String chinceseType;
+
+    public Long getGroupMenuId() {
+        return groupMenuId;
+    }
+
+    public void setGroupMenuId(Long groupMenuId) {
+        this.groupMenuId = groupMenuId;
+    }
 
     public String getGroupMenuName() {
         return groupMenuName;

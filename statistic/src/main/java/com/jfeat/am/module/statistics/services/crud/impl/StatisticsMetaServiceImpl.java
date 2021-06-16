@@ -16,6 +16,7 @@ import com.jfeat.am.module.statistics.api.model.MetaTag;
 import com.jfeat.am.module.statistics.services.crud.SQLSearchLabelService;
 import com.jfeat.am.module.statistics.services.crud.StatisticsMetaService;
 import com.jfeat.am.module.statistics.api.model.MetaColumns;
+import com.jfeat.am.module.statistics.services.domain.model.StatisticsMetaRecord;
 import com.jfeat.am.module.statistics.services.gen.crud.service.impl.CRUDStatisticsMetaServiceImpl;
 import com.jfeat.am.module.statistics.services.gen.persistence.dao.StatisticsMetaMapper;
 import com.jfeat.am.module.statistics.services.gen.persistence.model.StatisticsMeta;
@@ -78,18 +79,18 @@ public class StatisticsMetaServiceImpl extends CRUDStatisticsMetaServiceImpl imp
 
     @Override
     @Transactional
-    public Integer createStatisticAndMenu(StatisticsMeta meta){
+    public Integer createStatisticAndMenu(StatisticsMetaRecord meta){
         Integer res = 0;
         /***      生成前端代码   取消       **/
         //String webIndex = genWebCode(meta);
         /***      获取父类菜单路径          **/
-
-        Menu pMenu = menuService.retrieveMaster(meta.getMenuId());
+        meta.setMenuId(null);
+        Menu pMenu = menuService.retrieveMaster(meta.getGroupMenuId());
         //   /父菜单/table?table=field
 
         /***      创建菜单          **/
         Menu menu = MenuUtil.getInitMenu();
-        menu.setPid(meta.getMenuId());
+        menu.setPid(meta.getGroupMenuId());
         menu.setMenuName(meta.getTitle());
         menu.setOrgId(JWTKit.getTenantOrgId());
         menu.setMenuType(MenuType.MENU);

@@ -8,6 +8,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.jfeat.am.common.annotation.UrlPermission;
 import com.jfeat.am.module.log.annotation.BusinessLog;
 import com.jfeat.am.module.menu.services.gen.persistence.dao.MenuMapper;
+import com.jfeat.am.module.menu.services.gen.persistence.model.Menu;
 import com.jfeat.am.module.statistics.api.model.GenWebSetting;
 import com.jfeat.am.module.statistics.api.model.MetaTag;
 import com.jfeat.am.module.statistics.services.crud.ExtendedStatistics;
@@ -89,14 +90,14 @@ public class MetaEndpoing {
     @BusinessLog(name = "StatisticsMeta", value = "create StatisticsMeta")
     @PostMapping
     @ApiOperation(value = "新建 StatisticsMeta", response = StatisticsMeta.class)
-    public Tip createStatisticsMeta(@RequestBody StatisticsMeta entity) {
+    public Tip createStatisticsMeta(@RequestBody StatisticsMetaRecord entity) {
 
         Integer affected = 0;
         try {
             //类型进行映射
             entity.setType(MetaUtil.replaceType(entity.getType()));
 
-            if(entity.getMenuId()!=null){
+            if(entity.getGroupMenuId()!=null){
                 affected = statisticsMetaService.createStatisticAndMenu(entity);
             }
             else{
@@ -112,9 +113,9 @@ public class MetaEndpoing {
 
     @BusinessLog(name = "StatisticsMeta", value = "查看 StatisticsMeta")
     @GetMapping("/getOne/{id}")
-    @ApiOperation(value = "查看 StatisticsMeta", response = StatisticsMeta.class)
+    @ApiOperation(value = "查看 StatisticsMeta", response = StatisticsMetaRecord.class)
     public Tip getStatisticsMeta(@PathVariable Long id) {
-        StatisticsMeta statisticsMeta = statisticsMetaService.retrieveMaster(id);
+        StatisticsMetaRecord statisticsMeta = queryStatisticsMetaDao.selectOne(id);
 //        //类型进行映射
         statisticsMeta.setType(MetaUtil.transientType(statisticsMeta.getType()));
         return SuccessTip.create(statisticsMeta);
@@ -122,11 +123,19 @@ public class MetaEndpoing {
 
     @BusinessLog(name = "StatisticsMeta", value = "update StatisticsMeta")
     @PutMapping("/{id}")
-    @ApiOperation(value = "修改 StatisticsMeta", response = StatisticsMeta.class)
-    public Tip updateStatisticsMeta(@PathVariable Long id, @RequestBody StatisticsMeta entity) {
+    @ApiOperation(value = "修改 StatisticsMeta", response = StatisticsMetaRecord.class)
+    public Tip updateStatisticsMeta(@PathVariable Long id, @RequestBody StatisticsMetaRecord entity) {
         //类型进行映射
         entity.setType(MetaUtil.replaceType(entity.getType()));
         entity.setId(id);
+        if(entity.getGroupMenuId() != null){
+            //菜单组id不为空 更新对应菜单
+            if(entity.getMenuId()==null){throw new BusinessException(4001,"此报表没菜单");}
+            Menu menu = menuMapper.selectById(entity.getMenuId());
+            if(menu==null){throw new BusinessException(4001,"报表对应的菜单不存在");}
+            menu.setPid(entity.getGroupMenuId());
+            menuMapper.updateById(menu);
+        }
         return SuccessTip.create(statisticsMetaService.updateMaster(entity));
     }
 
