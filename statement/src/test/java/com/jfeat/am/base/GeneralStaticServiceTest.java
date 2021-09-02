@@ -6,6 +6,7 @@ import com.jfeat.am.module.statement.services.statistics.route.StatisticRouteDat
 import com.jfeat.am.module.statement.services.statistics.service.GeneralStatisticService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -14,6 +15,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.SQLException;
+import java.util.logging.Logger;
 
 @ActiveProfiles(profiles = "test")
 @RunWith(SpringRunner.class)
@@ -22,11 +24,15 @@ import java.sql.SQLException;
 @Transactional
 public class GeneralStaticServiceTest {
 
+    Logger logger = (Logger) LoggerFactory.getLogger(GeneralStaticServiceTest.class.getSimpleName());
+
     @Autowired
     private GeneralStatisticService generalStatisticService;
 
     @Test
-    public void testQueryStatisticPlaceholder() throws Exception{}
+    public void testQueryStatisticPlaceholder() throws Exception{
+        logger.info("testQueryStatisticPlaceholder...");
+    }
 
     //@Test
     public void testQueryStatisticTotal() throws Exception {

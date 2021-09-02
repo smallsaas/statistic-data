@@ -3,13 +3,13 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.jfeat</groupId>
     <artifactId>statistic-service</artifactId>
-    <version>1.2.1</version>
+    <version>1.3.0</version>
     <packaging>pom</packaging>
     <name>Statistic Service</name>
 
     <parent>
         <groupId>com.jfeat</groupId>
-        <artifactId>sb-parent</artifactId>
+        <artifactId>pom-parent</artifactId>
         <version>1.0.0</version>
         <relativePath/>
     </parent>
@@ -17,6 +17,5 @@
     <modules>
         <module>statement</module>
         <module>statistic</module>
-
     </modules>
 </project>
