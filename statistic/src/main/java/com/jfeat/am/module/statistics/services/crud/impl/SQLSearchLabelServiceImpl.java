@@ -16,9 +16,15 @@ public class SQLSearchLabelServiceImpl implements SQLSearchLabelService {
 
     Map<String,String> getDefaultMap(){
         Map<String,String> defaultMap = new HashMap<>();
-        defaultMap.put(JWTKitParameter.ORG_ID,JWTKit.getOrgId().toString());
-        defaultMap.put(JWTKitParameter.USER_ID,JWTKit.getUserId().toString());
-        defaultMap.put( JWTKitParameter.B_USER_TYPE,JWTKit.getBUserType());
+        if(JWTKit.getOrgId()!=null) {
+            defaultMap.put(JWTKitParameter.ORG_ID, JWTKit.getOrgId().toString());
+        }
+        if(JWTKit.getUserId()!=null) {
+            defaultMap.put(JWTKitParameter.USER_ID, JWTKit.getUserId().toString());
+        }
+        if(JWTKit.getBUserType()!=null) {
+            defaultMap.put(JWTKitParameter.B_USER_TYPE, JWTKit.getBUserType());
+        }
         return defaultMap;
     }
 
@@ -26,14 +32,13 @@ public class SQLSearchLabelServiceImpl implements SQLSearchLabelService {
         //尝试从JWTKIT中获取
         Map<String, String> defaultMap = getDefaultMap();
         for (String key:defaultMap.keySet()){
-            String slist[]=new String[1];
-            slist[0]=defaultMap.get(key);
-            if(requestMap.get(key)==null){
-                requestMap.put(key,slist);
+            String slist[] = new String[1];
+            slist[0] = defaultMap.get(key);
+            if (requestMap.get(key) == null) {
+                requestMap.put(key, slist);
             }
         }
         return requestMap;
-
     }
 
 
