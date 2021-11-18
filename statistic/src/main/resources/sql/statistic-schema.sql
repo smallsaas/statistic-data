@@ -105,5 +105,6 @@ CREATE TABLE `st_statistics_meta_group` (
    `field` varchar(80) DEFAULT NULL,
   `presenter` varchar(80) DEFAULT NULL,
   `api_return` varchar(5) default '0',
+  `seq` int(11) DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
