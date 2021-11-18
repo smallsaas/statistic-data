@@ -55,6 +55,11 @@
             <artifactId>crud-log</artifactId>
             <version>${crud-log.version}</version>
         </dependency>
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>${mysql-connector-java.version}</version> <!--old version 5.1.43-->
+        </dependency>
 
         <!--<dependency>
             <groupId>com.jfeat</groupId>

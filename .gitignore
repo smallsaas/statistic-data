@@ -14,4 +14,4 @@ LOG**
 .settings/
 .classpath
 .factorypath
-Dockerfile/app-openjre8/
+config/
