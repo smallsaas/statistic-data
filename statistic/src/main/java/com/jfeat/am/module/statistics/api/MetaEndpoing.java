@@ -6,7 +6,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.jfeat.am.common.annotation.UrlPermission;
-import com.jfeat.am.module.log.annotation.BusinessLog;
 import com.jfeat.am.module.menu.services.gen.persistence.dao.MenuMapper;
 import com.jfeat.am.module.menu.services.gen.persistence.model.Menu;
 import com.jfeat.am.module.statistics.api.model.GenWebSetting;
@@ -20,6 +19,7 @@ import com.jfeat.am.module.statistics.services.gen.persistence.dao.StatisticsMet
 import com.jfeat.am.module.statistics.services.gen.persistence.model.StatisticsMeta;
 import com.jfeat.am.module.statistics.util.GenCodeUtil;
 import com.jfeat.am.module.statistics.util.MetaUtil;
+import com.jfeat.crud.base.annotation.BusinessLog;
 import com.jfeat.crud.base.exception.BusinessCode;
 import com.jfeat.crud.base.exception.BusinessException;
 import com.jfeat.crud.base.tips.SuccessTip;
