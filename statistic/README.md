@@ -152,7 +152,7 @@ CREATE TABLE `st_statistics_meta` (
  <dependency>
     <groupId>com.jfeat</groupId>
     <artifactId>statistic</artifactId>
-    <version>1.0.1</version>
+    <version>1.3.0</version>
 </dependency>
 
 ```
