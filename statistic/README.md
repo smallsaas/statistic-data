@@ -39,6 +39,8 @@ export default function AgentReport() {
 src/pages/agent/config/agentReport.js
 
 //搜索栏配置
+
+
 //选择一  api 配置
 ```
 {
@@ -49,6 +51,8 @@ src/pages/agent/config/agentReport.js
     }
 }
 ```
+
+
 //选择二   本地配置
 ```
      {
