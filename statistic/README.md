@@ -37,6 +37,58 @@ export default function AgentReport() {
 ```
 主要内容配置
 src/pages/agent/config/agentReport.js
+
+//搜索栏配置
+//选择一  api 配置
+```
+{
+    layout: 'Empty',
+    component: 'AutoReportSearch',
+    config: {
+        share: 'agentReport',
+    }
+}
+```
+//选择二   本地配置
+```
+     {
+        layout: 'Empty',
+        component: 'Search',
+        config: {
+          share: 'sysUserReport',
+          fields: [
+            {
+              label: '店小二',
+              type: 'select-fetch',
+              props: {
+                placeholder: '请选择',
+                style: {
+                  width: 240
+                }
+              },
+              rules: [],
+              options: {
+                API: '/api/adm/users?roleid=server',
+                label: 'name',
+                value: 'id'
+              },
+              field: 'sysUserId'
+            },
+            {
+              label: '开始时间',
+              type: 'date',
+              field: 'startDate'
+            },
+            {
+              label: '结束时间',
+              type: 'date',
+              field: 'endDate'
+            }
+          ]
+        },
+      }
+```
+
 ```
 module.exports = {
   layout: 'Content',
