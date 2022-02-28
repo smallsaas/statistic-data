@@ -4,10 +4,6 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.jfeat.am.core.jwt.JWTKit;
-import com.jfeat.am.module.menu.services.domain.model.MenuType;
-import com.jfeat.am.module.menu.services.domain.service.MenuService;
-import com.jfeat.am.module.menu.services.gen.persistence.model.Menu;
-import com.jfeat.am.module.menu.util.MenuUtil;
 import com.jfeat.am.module.statistics.api.model.GenWebSetting;
 import com.jfeat.am.module.statistics.api.model.MetaOutputSetting;
 import com.jfeat.am.module.statistics.api.model.MetaTag;
@@ -61,8 +57,6 @@ public class StatisticsMetaServiceImpl extends CRUDStatisticsMetaServiceImpl imp
     SQLSearchLabelService sqlSearchLabelService;
 
     @Resource
-    MenuService menuService;
-    @Resource
     GenWebSetting genWebSetting;
 
 
@@ -73,44 +67,7 @@ public class StatisticsMetaServiceImpl extends CRUDStatisticsMetaServiceImpl imp
         return statisticsMetaMapper.selectById(id);
     }
 
-    @Override
-    @Transactional
-    public Integer createStatisticAndMenu(StatisticsMetaRecord meta){
-        Integer res = 0;
-        /***      生成前端代码   取消       **/
-        //String webIndex = genWebCode(meta);
-        /***      获取父类菜单路径          **/
-        meta.setMenuId(null);
-        Menu pMenu = menuService.retrieveMaster(meta.getGroupMenuId());
-        //   /父菜单/table?table=field
 
-        /***      创建菜单          **/
-        Menu menu = MenuUtil.getInitMenu();
-        menu.setPid(meta.getGroupMenuId());
-        menu.setMenuName(meta.getTitle());
-        menu.setOrgId(JWTKit.getTenantOrgId());
-        menu.setMenuType(MenuType.MENU);
-        menu.setPermId(DEFAULT_REPORT_PERM_ID);
-        menu.setPerm(DEFAULT_REPORT_VIEW);
-        //menu.setComponent(webIndex);
-        res += menuService.createMaster(menu,null);
-        logger.info("menuId,{}",menu.getId());
-
-        if(res == 0){
-            throw new BusinessException(BusinessCode.CRUD_GENERAL_ERROR,"菜单生成失败");
-        }
-
-        /***      创建报表          **/
-        meta.setMenuId(menu.getId());
-        res += createMaster(meta);
-
-        /***      获取报表的id 重新更新菜单路由          **/
-        String webIndex = pMenu.getComponent()+ File.separator+"table?id="+meta.getId();
-        menu.setComponent(webIndex);
-        menuService.updateMaster(menu,false);
-
-        return res;
-    }
 
     @Override
     public String genWebCode(StatisticsMeta meta){

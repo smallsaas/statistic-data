@@ -5,8 +5,10 @@
 
     <groupId>com.jfeat</groupId>
     <artifactId>statistic</artifactId>
-    <version>1.3.0</version>
+    <version>1.4.0</version>
     <packaging>jar</packaging>
+
+    <!-- 1.3 -> 1.4  rm  menu module   -->
 
     <name>Statistic</name>
     <description>Statistic Component</description>
@@ -27,13 +29,13 @@
     </properties>
 
     <dependencies>
-<!--TODO, statistic是基础库， 应该由menu依赖 statistic -->
-        <dependency>
+<!-- statistic是基础库， 应该由menu依赖 statistic -->
+       <!-- <dependency>
             <groupId>com.jfeat</groupId>
             <artifactId>menu</artifactId>
             <version>1.0.0</version>
-        </dependency>
-<!-- end TODO  -->
+        </dependency>-->
+<!-- end  -->
 
         <dependency>
             <groupId>com.jfeat</groupId>
@@ -45,6 +47,7 @@
             <artifactId>crud-core</artifactId>
             <version>${crud-core.version}</version>
         </dependency>
+
         <dependency>
             <groupId>com.jfeat</groupId>
             <artifactId>crud-plus</artifactId>
@@ -75,6 +78,18 @@
             <artifactId>ehcache-core</artifactId>
             <version>2.6.11</version>
             <scope>provided</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>mysql</groupId>
+                    <artifactId>mysql-connector-java</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>8.0.21</version>
         </dependency>
         <!-- <dependency>
             <groupId>org.ehcache</groupId>

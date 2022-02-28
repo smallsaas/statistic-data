@@ -6,8 +6,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.jfeat.am.common.annotation.UrlPermission;
-import com.jfeat.am.module.menu.services.gen.persistence.dao.MenuMapper;
-import com.jfeat.am.module.menu.services.gen.persistence.model.Menu;
 import com.jfeat.am.module.statistics.api.model.GenWebSetting;
 import com.jfeat.am.module.statistics.api.model.MetaTag;
 import com.jfeat.am.module.statistics.services.crud.ExtendedStatistics;
@@ -54,8 +52,7 @@ public class MetaEndpoing {
     StatisticsMetaMapper statisticsMetaMapper;
     @Resource
     GenWebSetting genWebSetting;
-    @Resource
-    MenuMapper menuMapper;
+
 
     @ApiOperation("根据字段获取报表")
     @GetMapping("/{field}")
@@ -96,13 +93,7 @@ public class MetaEndpoing {
         try {
             //类型进行映射
             entity.setType(MetaUtil.replaceType(entity.getType()));
-
-            if(entity.getGroupMenuId()!=null){
-                affected = statisticsMetaService.createStatisticAndMenu(entity);
-            }
-            else{
-                affected = statisticsMetaService.createMaster(entity);
-            }
+            affected = statisticsMetaService.createMaster(entity);
 
         } catch (DuplicateKeyException e) {
             throw new BusinessException(BusinessCode.DuplicateKey);
@@ -128,16 +119,6 @@ public class MetaEndpoing {
         //类型进行映射
         entity.setType(MetaUtil.replaceType(entity.getType()));
         entity.setId(id);
-        if(entity.getGroupMenuId() != null){
-            //菜单组id不为空 更新对应菜单
-            if(entity.getMenuId()==null){throw new BusinessException(4001,"此报表没菜单");}
-            Menu menu = menuMapper.selectById(entity.getMenuId());
-            Menu pMenu = menuMapper.selectById(entity.getGroupMenuId());
-            if(menu==null){throw new BusinessException(4001,"报表对应的菜单不存在");}
-            menu.setPid(entity.getGroupMenuId());
-            menu.setComponent(pMenu.getComponent()+"/table?id="+id);
-            menuMapper.updateById(menu);
-        }
         return SuccessTip.create(statisticsMetaService.updateMaster(entity));
     }
 
@@ -146,9 +127,6 @@ public class MetaEndpoing {
     @ApiOperation("删除 StatisticsMeta")
     public Tip deleteStatisticsMeta(@PathVariable Long id) {
         StatisticsMeta statisticsMeta = statisticsMetaService.retrieveMaster(id);
-        if(statisticsMeta!=null && statisticsMeta.getMenuId()!=null){
-            menuMapper.deleteById(statisticsMeta.getMenuId());
-        }
         return SuccessTip.create(statisticsMetaService.deleteMaster(id));
     }
 

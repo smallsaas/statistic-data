@@ -26,8 +26,6 @@ public interface StatisticsMetaService extends CRUDStatisticsMetaService {
 
     StatisticsMeta getStatisticsMetaById(Long id);
 
-    @Transactional
-    Integer createStatisticAndMenu(StatisticsMetaRecord meta);
 
     String genWebCode(StatisticsMeta meta);
 
