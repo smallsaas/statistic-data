@@ -17,5 +17,6 @@
     <modules>
         <module>statement</module>
         <module>statistic</module>
+        <module>statistic-expansion</module>
     </modules>
 </project>
