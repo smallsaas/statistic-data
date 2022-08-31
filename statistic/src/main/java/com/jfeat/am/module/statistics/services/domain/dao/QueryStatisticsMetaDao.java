@@ -16,7 +16,7 @@ import java.util.List;
 public interface QueryStatisticsMetaDao extends BaseMapper<StatisticsMeta> {
     List<StatisticsMetaRecord> findStatisticsMetaPage(Page<StatisticsMetaRecord> page, @Param("record") StatisticsMetaRecord record,
                                                       @Param("search") String search, @Param("orderBy") String orderBy,
-                                                      @Param("startTime") Date startTime, @Param("endTime") Date endTime);
+                                                      @Param("startTime") Date startTime, @Param("endTime") Date endTime,@Param("type") Integer type);
 
     StatisticsMetaRecord selectOne(Long id);
 }

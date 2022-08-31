@@ -10,6 +10,7 @@ public class MetaTag {
 
     private Long current;
     private Long size;
+    private String appid;
 
     public static final boolean flag = false;
 
@@ -27,6 +28,14 @@ public class MetaTag {
         this.enableType=flag;
         this.enablePages=flag;
         this.enableHead=flag;
+    }
+
+    public String getAppid() {
+        return appid;
+    }
+
+    public void setAppid(String appid) {
+        this.appid = appid;
     }
 
     public Long getCurrent() {

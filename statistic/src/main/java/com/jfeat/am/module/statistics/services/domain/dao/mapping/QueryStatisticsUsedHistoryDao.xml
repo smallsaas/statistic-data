@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jfeat.am.module.statistics.services.domain.dao.QueryStatisticsUsedHistoryDao">
+                                                                                                                                                                                                                                                                                                            <sql id="Base_Column_List">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                st_statistics_used_history.id, st_statistics_used_history.create_time AS createTime, st_statistics_used_history.update_time AS updateTime, st_statistics_used_history.user_id AS userId, st_statistics_used_history.meta_id AS metaId, st_statistics_used_history.meta_title AS metaTitle, st_statistics_used_history.come_form AS comeForm, st_statistics_used_history.come_form_type AS comeFormType
+    </sql>
+
+    
+    
+
+    <select id="queryMasterModel" resultType="StatisticsUsedHistoryModel">
+       SELECT st_statistics_used_history.*
+       FROM st_statistics_used_history
+       WHERE st_statistics_used_history.id=#{id}
+       GROUP BY st_statistics_used_history.id
+    </select>
+
+
+                                
+    <select id="findStatisticsUsedHistoryPage" resultType="StatisticsUsedHistoryRecord" parameterType="StatisticsUsedHistoryRecord">
+            SELECT <include refid="Base_Column_List"/>
+
+        
+
+        FROM st_statistics_used_history
+
+        
+        
+        WHERE 1=1
+        
+
+        
+                                                                            <if test="record.id != null and record.id>0 ">
+                                    AND st_statistics_used_history.id LIKE CONCAT('%',#{record.id},'%')
+                            </if>
+                                                                    
+
+                                                                                        <if test="record.createTime != null and record.createTime>0 ">
+                                    AND st_statistics_used_history.create_time LIKE CONCAT('%',#{record.createTime},'%')
+                            </if>
+                                                                    
+
+                                                                                        <if test="record.updateTime != null and record.updateTime>0 ">
+                                    AND st_statistics_used_history.update_time LIKE CONCAT('%',#{record.updateTime},'%')
+                            </if>
+                                                                    
+
+                                                                                        <if test="record.userId != null and record.userId>0 ">
+                                    AND st_statistics_used_history.user_id LIKE CONCAT('%',#{record.userId},'%')
+                            </if>
+                                                                    
+
+                                                                                        <if test="record.metaId != null and record.metaId>0 ">
+                                    AND st_statistics_used_history.meta_id LIKE CONCAT('%',#{record.metaId},'%')
+                            </if>
+                                                                    
+
+                                                                                        <if test="record.metaTitle != null and record.metaTitle!= ''">
+                                    AND st_statistics_used_history.meta_title LIKE CONCAT('%',#{record.metaTitle},'%')
+                            </if>
+                                                                    
+
+                                                                                        <if test="record.comeForm != null and record.comeForm!= ''">
+                                    AND st_statistics_used_history.come_form LIKE CONCAT('%',#{record.comeForm},'%')
+                            </if>
+                                                                    
+
+                                                                                                        <if test="record.comeFormType != null and record.comeFormType!= ''">
+                                    AND st_statistics_used_history.come_form_type LIKE CONCAT('%',#{record.comeFormType},'%')
+                            </if>
+        
+        <if test="startTime != null">
+            <![CDATA[AND st_statistics_used_history.start_time >= DATE(#{startTime})]]>
+        </if>
+        <if test="endTime != null">
+            <![CDATA[AND st_statistics_used_history.end_time <= DATE(#{endTime}]]>
+        </if>
+            <!--
+        <if test="search != null and search != ''">
+            OR st_statistics_used_history.name LIKE CONCAT('%',#{search},'%')
+        </if>
+        -->
+                                    </select>
+</mapper>

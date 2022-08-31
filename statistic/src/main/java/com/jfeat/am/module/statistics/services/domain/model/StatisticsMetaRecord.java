@@ -16,6 +16,26 @@ public class StatisticsMetaRecord extends StatisticsMeta{
 
     private String chinceseType;
 
+    private String appName;
+
+    private String appType;
+
+    public String getAppType() {
+        return appType;
+    }
+
+    public void setAppType(String appType) {
+        this.appType = appType;
+    }
+
+    public String getAppName() {
+        return appName;
+    }
+
+    public void setAppName(String appName) {
+        this.appName = appName;
+    }
+
     public Long getGroupMenuId() {
         return groupMenuId;
     }

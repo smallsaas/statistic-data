@@ -59,6 +59,10 @@
         <if test="endTime != null">
             <![CDATA[AND st_statistics_meta.end_time <= DATE(#{endTime)]]>
         </if>
+
+        <if test="type != null">
+            AND (#{type} &amp; st_statistics_meta.end_user_type != 0 or st_statistics_meta.end_user_type is null)
+        </if>
         <!--
     <if test="search != null and search != ''">
         OR st_statistics_meta.name LIKE CONCAT('%',#{search},'%')

@@ -84,6 +84,26 @@ public class StatisticsMeta extends Model<StatisticsMeta> {
 
 	private Long permId;
 
+	private String appid;
+
+	private Integer endUserType;
+
+	public String getAppid() {
+		return appid;
+	}
+
+	public void setAppid(String appid) {
+		this.appid = appid;
+	}
+
+	public Integer getEndUserType() {
+		return endUserType;
+	}
+
+	public void setEndUserType(Integer endUserType) {
+		this.endUserType = endUserType;
+	}
+
 	public Long getPermId() {
 		return permId;
 	}

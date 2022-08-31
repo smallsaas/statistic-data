@@ -4,12 +4,22 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.jfeat.am.core.jwt.JWTKit;
 import com.jfeat.am.module.statistics.api.model.MetaGroupTemplate;
 import com.jfeat.am.module.statistics.api.model.MetaTag;
 import com.jfeat.am.module.statistics.api.model.TemplateChildren;
 import com.jfeat.am.module.statistics.services.crud.ExtendedStatistics;
 import com.jfeat.am.module.statistics.services.crud.StatisticsMetaService;
+import com.jfeat.am.module.statistics.services.crud.model.AppTypeMap;
+import com.jfeat.am.module.statistics.services.crud.model.ReportCode;
+import com.jfeat.am.module.statistics.services.domain.model.StatisticsMetaRecord;
+import com.jfeat.am.module.statistics.services.domain.model.StatisticsUsedHistoryRecord;
+import com.jfeat.am.module.statistics.services.domain.service.StatisticsUsedHistoryService;
+import com.jfeat.am.module.statistics.services.gen.persistence.dao.StatisticsMetaMapper;
+import com.jfeat.am.module.statistics.services.gen.persistence.dao.StatisticsUsedHistoryMapper;
 import com.jfeat.am.module.statistics.services.gen.persistence.model.StatisticsMeta;
+import com.jfeat.am.module.statistics.services.gen.persistence.model.StatisticsUsedHistory;
+import com.jfeat.am.module.statistics.util.SimpleEncryptionUtil;
 import com.jfeat.crud.base.exception.BusinessCode;
 import com.jfeat.crud.base.exception.BusinessException;
 import org.slf4j.Logger;
@@ -18,6 +28,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 @Service
@@ -25,8 +36,91 @@ public class ExtendedStatisticsImpl implements ExtendedStatistics {
 
     private static final Logger logger = LoggerFactory.getLogger(ExtendedStatisticsImpl.class);
 
+    public static final Long DEFAULT_EXCEED_TIME = 86400000l;
+
+
+    @Resource
+    StatisticsMetaMapper statisticsMetaMapper;
+
+    @Resource
+    StatisticsUsedHistoryService statisticsUsedHistoryService;
+    @Resource
+    StatisticsUsedHistoryMapper statisticsUsedHistoryMapper;
+
     @Resource
     StatisticsMetaService statisticsMetaService;
+
+
+
+    @Override
+    public Integer recordHistory(String field, String appid){
+        Long userId = JWTKit.getUserId();
+        if(userId != null){
+            StatisticsMetaRecord metaByField = statisticsMetaMapper.getMetaByField(field, appid);
+            StatisticsUsedHistory statisticsUsedHistory = new StatisticsUsedHistoryRecord();
+            statisticsUsedHistory.setMetaId(metaByField.getMenuId());
+            statisticsUsedHistory.setMetaTitle(metaByField.getTitle());
+            statisticsUsedHistory.setComeForm(metaByField.getAppName());
+            statisticsUsedHistory.setComeFormType(AppTypeMap.getChiName(metaByField.getAppType()));
+            Integer effect = 0 ;
+
+            statisticsUsedHistoryMapper.insert(statisticsUsedHistory);
+
+
+            return effect;
+        }else{
+            return 0;
+        }
+
+    }
+
+    @Override
+    public String genCode(ReportCode reportCode){
+        StringBuilder code = new StringBuilder();
+
+        if(reportCode.getCheckUser() && (JWTKit.getUserId() != null || reportCode.getUserId() != null)){
+            reportCode.setUserId( reportCode.getUserId()==null? JWTKit.getUserId():reportCode.getUserId());
+            code.append(ReportCode.USER_ID_CODE);
+            code.append(reportCode.getUserId());
+        }
+        if(reportCode.getFiled() == null){
+            throw new BusinessException(BusinessCode.BadRequest,"filed不能为空");
+        }
+
+        code.append(ReportCode.FILED_CODE);
+        code.append(reportCode.getFiled());
+        code.append(ReportCode.EXCEED_TIME_CODE);
+        // 86400000 = 1000 * 60 *60 *24 天
+        long l = System.currentTimeMillis()/DEFAULT_EXCEED_TIME;
+        code.append(l+reportCode.getExceedTime());
+
+        if(reportCode.getAppid() != null){
+            code.append(ReportCode.APPID_CODE);
+            code.append(reportCode.getAppid());
+        }
+
+
+        return  SimpleEncryptionUtil.encryption(code.toString(),3);
+    }
+
+    @Override
+    public JSONObject getReportByCode(ReportCode reportCode, MetaTag metaTag){
+        long nowTime = System.currentTimeMillis();
+        long exceedTime = reportCode.getExceedTime();
+        if(exceedTime < nowTime){
+            throw new BusinessException(BusinessCode.BadRequest,"口令已过期");
+        }
+        if(reportCode.getUserId() != null){
+            Long userId = JWTKit.getUserId();
+            if(userId == null){
+                throw new BusinessException(BusinessCode.NoPermission,"该报表需要登录后查看");
+            }
+            if(!userId.equals(reportCode.getUserId())){
+                throw new BusinessException(BusinessCode.BadRequest,"您无权查看此报表");
+            }
+        }
+        return   getJSONByField(reportCode.getFiled(),metaTag);
+    }
 
     //根据id获取表单信息
     @Override

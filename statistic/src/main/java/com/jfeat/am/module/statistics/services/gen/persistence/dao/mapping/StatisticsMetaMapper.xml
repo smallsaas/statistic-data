@@ -28,4 +28,20 @@
          permission,tips,layout,span,chart,pattern
     </sql>
 
+	<select id="getMetaByField" resultType="StatisticsMetaRecord">
+		select st_statistics_meta.*,t_app.name as appName
+		     ,t_app.app_type as appType
+		from st_statistics_meta
+		left join t_app on t_app.appid = st_statistics_meta.appid
+		where
+		st_statistics_meta.field = #{field}
+		<if test="appid != null">
+			and st_statistics_meta.appid = #{appid}
+		</if>
+		<if test="appid == null">
+			and st_statistics_meta.appid is null
+		</if>
+
+	</select>
+
 </mapper>
