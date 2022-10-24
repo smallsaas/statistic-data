@@ -15,3 +15,4 @@ LOG**
 .classpath
 .factorypath
 config/
+node_modules/
